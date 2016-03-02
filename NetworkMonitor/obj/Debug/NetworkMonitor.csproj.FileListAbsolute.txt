@@ -1,0 +1,14 @@
+c:\users\ogore\documents\visual studio 2015\Projects\NetworkMonitor\NetworkMonitor\bin\Debug\NetworkMonitor.exe.config
+c:\users\ogore\documents\visual studio 2015\Projects\NetworkMonitor\NetworkMonitor\bin\Debug\NetworkMonitor.exe
+c:\users\ogore\documents\visual studio 2015\Projects\NetworkMonitor\NetworkMonitor\bin\Debug\NetworkMonitor.pdb
+c:\users\ogore\documents\visual studio 2015\Projects\NetworkMonitor\NetworkMonitor\obj\Debug\NetworkMonitor.csprojResolveAssemblyReference.cache
+c:\users\ogore\documents\visual studio 2015\Projects\NetworkMonitor\NetworkMonitor\obj\Debug\MainView.g.cs
+c:\users\ogore\documents\visual studio 2015\Projects\NetworkMonitor\NetworkMonitor\obj\Debug\App.g.cs
+c:\users\ogore\documents\visual studio 2015\Projects\NetworkMonitor\NetworkMonitor\obj\Debug\NetworkMonitor_MarkupCompile.cache
+c:\users\ogore\documents\visual studio 2015\Projects\NetworkMonitor\NetworkMonitor\obj\Debug\NetworkMonitor_MarkupCompile.lref
+c:\users\ogore\documents\visual studio 2015\Projects\NetworkMonitor\NetworkMonitor\obj\Debug\MainView.baml
+c:\users\ogore\documents\visual studio 2015\Projects\NetworkMonitor\NetworkMonitor\obj\Debug\NetworkMonitor.g.resources
+c:\users\ogore\documents\visual studio 2015\Projects\NetworkMonitor\NetworkMonitor\obj\Debug\NetworkMonitor.Properties.Resources.resources
+c:\users\ogore\documents\visual studio 2015\Projects\NetworkMonitor\NetworkMonitor\obj\Debug\NetworkMonitor.csproj.GenerateResource.Cache
+c:\users\ogore\documents\visual studio 2015\Projects\NetworkMonitor\NetworkMonitor\obj\Debug\NetworkMonitor.exe
+c:\users\ogore\documents\visual studio 2015\Projects\NetworkMonitor\NetworkMonitor\obj\Debug\NetworkMonitor.pdb
