@@ -17,7 +17,6 @@ namespace NetworkMonitor
 
         Socket mainSocket;
         byte[] buffer;
-        CancellationTokenSource cts = new CancellationTokenSource();
 
         public bool Started { get; private set; }
 
@@ -29,33 +28,29 @@ namespace NetworkMonitor
         /// </summary>
         public static NetworkDataMonitor Instance { get { return _instance.Value; } }
 
-        public async Task StartAsync(IPAddress ipAddr, IPEndPoint ipEndPoint)   // Запускает мониторинг в асинхронном режиме. 
+        public void Start(IPAddress ipAddr, IPEndPoint ipEndPoint)   // Запускает мониторинг в синхронном режиме. 
         {
             if (Started) return;
             try
             {
                 using (mainSocket = new Socket(ipAddr.AddressFamily, SocketType.Raw, ProtocolType.IP))   // Используется сырой сокет. Требуются права администратора.
                 {
-                    buffer = new byte[mainSocket.ReceiveBufferSize];
+                    buffer = new byte[mainSocket.ReceiveBufferSize];    // Размер буффера равен размеру внутреннего буффера сокета.
                     mainSocket.Bind(ipEndPoint);
                     mainSocket.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.HeaderIncluded, true);
                     byte[] optionIn = new byte[4] { 1, 0, 0, 0 };
                     byte[] optionOut = new byte[4];
                     mainSocket.IOControl(IOControlCode.ReceiveAll, optionIn, optionOut);
 
-                    await Task.Run(() =>
+                    Started = true;
+                    while (Started)
                     {
-                        Started = true;
-                        while (!cts.IsCancellationRequested)
-                        {
-                            int received = mainSocket.Receive(buffer, 0, buffer.Length, SocketFlags.None);
-                            OnPacketReceivedEvent(new PacketIP(buffer, received));
-                            Array.Clear(buffer, 0, received);
-                        }
-                    }, cts.Token);
+                        int received = mainSocket.Receive(buffer, 0, buffer.Length, SocketFlags.None);  // Считываем пакет в буффер.
+                        OnPacketReceivedEvent(new PacketIP(buffer, received));  // Создаем новый IP пакет, запускаем событие (рассылаем пакет подписчикам).
+                        Array.Clear(buffer, 0, received); // Очищаем пакет.
+                    }
                 }
             }
-            catch (Exception ex) { System.Windows.MessageBox.Show(ex.Message); }
             finally
             {
                 Array.Clear(buffer, 0, buffer.Length);
@@ -63,10 +58,15 @@ namespace NetworkMonitor
             }
         }
 
+        public async Task StartAsync(IPAddress ipAddr, IPEndPoint ipEndPoint)
+        {
+            await Task.Run(() => Start(ipAddr, ipEndPoint));
+        }
+
 
         public void Stop()
         {
-            cts.Cancel();       
+            Started = false;  
         }
 
         void OnPacketReceivedEvent (PacketIP packet)

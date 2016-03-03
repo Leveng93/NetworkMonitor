@@ -12,3 +12,6 @@ c:\users\ogore\documents\visual studio 2015\Projects\NetworkMonitor\NetworkMonit
 c:\users\ogore\documents\visual studio 2015\Projects\NetworkMonitor\NetworkMonitor\obj\Debug\NetworkMonitor.csproj.GenerateResource.Cache
 c:\users\ogore\documents\visual studio 2015\Projects\NetworkMonitor\NetworkMonitor\obj\Debug\NetworkMonitor.exe
 c:\users\ogore\documents\visual studio 2015\Projects\NetworkMonitor\NetworkMonitor\obj\Debug\NetworkMonitor.pdb
+D:\Ogore\OneDrive\Documents\Visual Studio 2015\Projects\NetworkMonitor\NetworkMonitor\bin\Debug\NetworkMonitor.exe.config
+D:\Ogore\OneDrive\Documents\Visual Studio 2015\Projects\NetworkMonitor\NetworkMonitor\obj\Debug\NetworkMonitor.exe
+D:\Ogore\OneDrive\Documents\Visual Studio 2015\Projects\NetworkMonitor\NetworkMonitor\obj\Debug\NetworkMonitor.pdb
