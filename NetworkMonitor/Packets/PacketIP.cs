@@ -20,20 +20,16 @@ namespace NetworkMonitor.Packets
         Byte[] data;                    // Данные IP пакета.
 
         Byte headerLength;              // Длина заголовка.
+        UInt16 messageLength;            // Длина сообщения.
 
 
         PacketIP() { }
 
-        public PacketIP(Byte[] Buffer, Int32 Recived)
+        public PacketIP(Byte[] Buffer, Int32 Received)
         {
-            MemoryStream memoryStream = null;
-            BinaryReader binaryReader = null;
-            
-            try
+            using (MemoryStream memoryStream = new MemoryStream(Buffer, 0, Received))
+            using (BinaryReader binaryReader = new BinaryReader(memoryStream))
             {
-                memoryStream = new MemoryStream(Buffer, 0, Recived); 
-                binaryReader = new BinaryReader(memoryStream);
-
                 versionAndHeaderLength = binaryReader.ReadByte();
                 serviceType = binaryReader.ReadByte();
                 totalLen = (UInt16)IPAddress.NetworkToHostOrder(binaryReader.ReadInt16());
@@ -50,16 +46,11 @@ namespace NetworkMonitor.Packets
                 headerLength >>= 4;
                 headerLength *= 4;
 
-                data = new byte[totalLen - headerLength];
-                Array.Copy(Buffer, headerLength, data, 0, data.Length);
+                messageLength = (UInt16)(totalLen - headerLength);
 
+                data = new byte[messageLength];
+                Array.Copy(Buffer, headerLength, data, 0, data.Length);
             }
-            finally
-            {
-                binaryReader.Close();
-                memoryStream.Close();
-            }
-            
         }
 
         public String Version
@@ -76,9 +67,9 @@ namespace NetworkMonitor.Packets
         /// <summary>
         /// Длина IP заголовка.
         /// </summary>
-        public String HeaderLength
+        public Byte HeaderLength
         {
-            get { return headerLength.ToString(); }
+            get { return headerLength; }
         }
 
         /// <summary>
@@ -92,17 +83,17 @@ namespace NetworkMonitor.Packets
         /// <summary>
         /// Общая длина всего IP пакета.
         /// </summary>
-        public String TotalLen
+        public UInt16 TotalLen
         {
-            get { return totalLen.ToString(); }
+            get { return totalLen; }
         }
 
         /// <summary>
         /// Идентификатор пакета. Используется для распознавания пакетов после фрагментации.
         /// </summary>
-        public String Id
+        public UInt16 Id
         {
-            get { return id.ToString(); }
+            get { return id; }
         }
 
         /// <summary>
@@ -115,29 +106,29 @@ namespace NetworkMonitor.Packets
                 UInt16 flags = (UInt16)(flagsAndOffset >> 13);
                 if (flags == 2) return "Not fragmented";
                 else if (flags == 1) return "Fragmented";
-                else return flags.ToString();
+                return flags.ToString();
             }
         }
 
         /// <summary>
         /// Смещение фрагментации.
         /// </summary>
-        public String Offset
+        public UInt16 Offset
         {
             get
             {
                 UInt16 offset = (UInt16)(flagsAndOffset << 3);
                 offset >>= 3;
-                return offset.ToString();
+                return offset;
             }
         }
 
         /// <summary>
         /// Время жизни пакета.
         /// </summary>
-        public String TTL
+        public Byte TTL
         {
-            get { return ttl.ToString(); }
+            get { return ttl; }
         }
 
         public String Protocol
@@ -188,9 +179,9 @@ namespace NetworkMonitor.Packets
         /// <summary>
         /// Длина сообщения из IP пакета.
         /// </summary>
-        public String DataLength
+        public UInt16 MessageLength
         {
-            get { return (totalLen - headerLength).ToString(); }
+            get { return messageLength; }
         }
 
         /// <summary>
