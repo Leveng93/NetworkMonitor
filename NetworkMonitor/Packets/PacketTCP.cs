@@ -52,10 +52,7 @@ namespace NetworkMonitor.Packets
         /// </summary>
         public ushort SourcePort
         {
-            get
-            {
-                return sourcePort;
-            }
+            get { return sourcePort; }
         }
 
         /// <summary>
@@ -63,12 +60,12 @@ namespace NetworkMonitor.Packets
         /// </summary>
         public ushort DestinationPort
         {
-            get
-            {
-                return destinationPort;
-            }
+            get { return destinationPort; }
         }
 
+        /// <summary>
+        /// Последовательный номер.
+        /// </summary>
         public uint SequenceNumber
         {
             get { return sequenceNumber; }
@@ -76,7 +73,10 @@ namespace NetworkMonitor.Packets
 
         public uint AcknowledgmentNumber
         {
-            get { return acknowledgmentNumber; }
+            get
+            {
+                return acknowledgmentNumber;
+            }
         }
 
         public int DataOffsetAndFlags
