@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Net.Sockets;
 using System.Net;
+using System.Windows;
 
 namespace NetworkMonitor
 {
@@ -18,7 +19,11 @@ namespace NetworkMonitor
             IPAddress ipAddr = ipHost.AddressList[4];   // Дать пользователю выбрать IP в GUI;
             IPEndPoint ipEndPoint = new IPEndPoint(ipAddr, 11000);
 
-            await monitor.StartAsync(ipAddr, ipEndPoint);
+            try
+            {
+                await monitor.StartAsync(ipAddr, ipEndPoint);
+            }
+            catch (Exception ex) { MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK); }
         }
     }
 }

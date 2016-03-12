@@ -15,6 +15,7 @@ namespace NetworkMonitor.Packets
         Int16 checksum;                 // Контрольная сумма. 2 байта.
         UInt16 urgentPointer;           // Срочный указатель: сообщает номер очереди для октета, следующего за срочными данными. 2 байта.
         UInt32 optionsAndPading;        // Опции - 3 байта. Заполнитель - переменная длина, чтобы довести размер заголовка до целого числа 32х-битных слов.
+
         Byte headerLength;              // Длина заголовка.
         UInt16 messageLength;           // Длина сообщения.
 
@@ -46,7 +47,9 @@ namespace NetworkMonitor.Packets
             }
         }
 
-
+        /// <summary>
+        /// Порт источника.
+        /// </summary>
         public ushort SourcePort
         {
             get
@@ -55,11 +58,32 @@ namespace NetworkMonitor.Packets
             }
         }
 
+        /// <summary>
+        /// Порт получателя.
+        /// </summary>
         public ushort DestinationPort
         {
             get
             {
                 return destinationPort;
+            }
+        }
+
+        public uint SequenceNumber
+        {
+            get { return sequenceNumber; }
+        }
+
+        public uint AcknowledgmentNumber
+        {
+            get { return acknowledgmentNumber; }
+        }
+
+        public int DataOffsetAndFlags
+        {
+            get
+            {
+                return dataOffsetAndFlags >> 12;
             }
         }
     }
