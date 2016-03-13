@@ -5,6 +5,17 @@ using System.Text;
 
 namespace NetworkMonitor.Packets
 {
+    [Flags]
+    public enum FlagsTCP : UInt16
+    {
+        FYN = 1,    // Флаг окончания передачи со стороны отправителя.
+        SYN = 2,    // Синхронизация чисел последовательности.
+        RST = 4,    // Переустановка соединения.
+        PSH = 8,    // Флаг форсированной отправки.
+        ACK = 16,   // Флаг пакета, содержащего подтверждение получения.
+        URG = 32    // Флаг срочности.        
+    }
+
     class PacketTCP
     {
         UInt16 sourcePort;              // Порт источника. 2 байта.
@@ -19,6 +30,8 @@ namespace NetworkMonitor.Packets
 
         Byte headerLength;              // Длина заголовка.
         UInt16 messageLength;           // Длина сообщения.
+
+        FlagsTCP flags;
 
         byte[] data;
 
@@ -43,6 +56,11 @@ namespace NetworkMonitor.Packets
                 headerLength *= 4;
 
                 messageLength = (UInt16)(Received - headerLength);
+
+                UInt16 fl = (UInt16)(dataOffsetAndFlags << 10);
+                fl >>= 10;
+                flags = (FlagsTCP)fl;                
+                
                 data = new byte[messageLength];
                 Array.Copy(Buffer, headerLength, data, 0, data.Length);
             }
@@ -76,7 +94,7 @@ namespace NetworkMonitor.Packets
         {
             get
             {
-                if ((dataOffsetAndFlags & 0x10) != 0) 
+                if(flags.HasFlag(FlagsTCP.ACK))
                     return acknowledgmentNumber;
                 return 0;
             }
@@ -84,27 +102,12 @@ namespace NetworkMonitor.Packets
 
         public Int32 DataOffset
         {
-            get
-            {
-                return dataOffsetAndFlags >> 12;
-            }
+            get { return dataOffsetAndFlags >> 12; }
         }
 
         public String Flags
         {
-            get
-            {
-                StringBuilder sb = new StringBuilder();
-
-                if ((dataOffsetAndFlags & 0x20) != 0) sb.Append("URG "); // Флаг срочности.
-                if ((dataOffsetAndFlags & 0x10) != 0) sb.Append("ACK "); // Флаг пакета, содержащего подтверждение получения.
-                if ((dataOffsetAndFlags & 0x8) != 0) sb.Append("PSH ");  // Флаг форсированной отправки.
-                if ((dataOffsetAndFlags & 0x4) != 0) sb.Append("RST ");  // Переустановка соединения.
-                if ((dataOffsetAndFlags & 0x2) != 0) sb.Append("SYN ");  // Синхронизация чисел последовательности.
-                if ((dataOffsetAndFlags & 0x1) != 0) sb.Append("FYN ");  // Флаг окончания передачи со стороны отправителя.
-
-                return sb.ToString();
-            }
+            get { return string.Format("{0}", flags); }
         }
 
         public UInt16 Window
@@ -121,7 +124,7 @@ namespace NetworkMonitor.Packets
         {
             get
             {
-                if ((dataOffsetAndFlags & 0x20) != 0)
+                if (flags.HasFlag(FlagsTCP.URG))
                     return urgentPointer;
                 return 0;
             }
@@ -140,6 +143,11 @@ namespace NetworkMonitor.Packets
         public Byte[] Data
         {
             get { return data; }
+        }
+
+        public bool HasFlag (FlagsTCP flag)
+        {
+            return flags.HasFlag(flag);
         }
     }
 }
