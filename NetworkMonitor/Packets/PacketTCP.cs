@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Net;
+using System.Text;
 
 namespace NetworkMonitor.Packets
 {
@@ -50,7 +51,7 @@ namespace NetworkMonitor.Packets
         /// <summary>
         /// Порт источника.
         /// </summary>
-        public ushort SourcePort
+        public UInt16 SourcePort
         {
             get { return sourcePort; }
         }
@@ -58,7 +59,7 @@ namespace NetworkMonitor.Packets
         /// <summary>
         /// Порт получателя.
         /// </summary>
-        public ushort DestinationPort
+        public UInt16 DestinationPort
         {
             get { return destinationPort; }
         }
@@ -66,25 +67,79 @@ namespace NetworkMonitor.Packets
         /// <summary>
         /// Последовательный номер.
         /// </summary>
-        public uint SequenceNumber
+        public UInt32 SequenceNumber
         {
             get { return sequenceNumber; }
         }
 
-        public uint AcknowledgmentNumber
+        public UInt32 AcknowledgmentNumber
         {
             get
             {
-                return acknowledgmentNumber;
+                if ((dataOffsetAndFlags & 0x10) != 0) 
+                    return acknowledgmentNumber;
+                return 0;
             }
         }
 
-        public int DataOffsetAndFlags
+        public Int32 DataOffset
         {
             get
             {
                 return dataOffsetAndFlags >> 12;
             }
+        }
+
+        public String Flags
+        {
+            get
+            {
+                StringBuilder sb = new StringBuilder();
+
+                if ((dataOffsetAndFlags & 0x20) != 0) sb.Append("URG "); // Флаг срочности.
+                if ((dataOffsetAndFlags & 0x10) != 0) sb.Append("ACK "); // Флаг пакета, содержащего подтверждение получения.
+                if ((dataOffsetAndFlags & 0x8) != 0) sb.Append("PSH ");  // Флаг форсированной отправки.
+                if ((dataOffsetAndFlags & 0x4) != 0) sb.Append("RST ");  // Переустановка соединения.
+                if ((dataOffsetAndFlags & 0x2) != 0) sb.Append("SYN ");  // Синхронизация чисел последовательности.
+                if ((dataOffsetAndFlags & 0x1) != 0) sb.Append("FYN ");  // Флаг окончания передачи со стороны отправителя.
+
+                return sb.ToString();
+            }
+        }
+
+        public UInt16 Window
+        {
+            get { return window; }
+        }
+
+        public Int16 Checksum
+        {
+            get { return checksum; }
+        }
+
+        public UInt16 UrgentPointer
+        {
+            get
+            {
+                if ((dataOffsetAndFlags & 0x20) != 0)
+                    return urgentPointer;
+                return 0;
+            }
+        }
+
+        public Byte HeaderLength
+        {
+            get { return headerLength; }
+        }
+
+        public UInt16 MessageLength
+        {
+            get { return messageLength; }
+        }
+
+        public Byte[] Data
+        {
+            get { return data; }
         }
     }
 }
