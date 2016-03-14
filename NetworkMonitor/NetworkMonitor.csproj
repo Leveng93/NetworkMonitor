@@ -73,6 +73,7 @@
     <Compile Include="MainViewModel.cs" />
     <Compile Include="NetworkDataMonitor.cs" />
     <Compile Include="Packets\PacketTCP.cs" />
+    <Compile Include="Packets\PacketUDP.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

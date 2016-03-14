@@ -21,7 +21,7 @@ namespace NetworkMonitor
 
             try
             {
-                await monitor.StartAsync(ipAddr, ipEndPoint);
+                await Task.Run(() => monitor.Start(ipAddr, ipEndPoint));
             }
             catch (Exception ex) { MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK); }
         }

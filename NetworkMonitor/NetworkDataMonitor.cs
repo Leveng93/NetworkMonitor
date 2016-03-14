@@ -2,7 +2,6 @@
 using System;
 using System.Net;
 using System.Net.Sockets;
-using System.Threading.Tasks;
 
 namespace NetworkMonitor
 {
@@ -37,7 +36,9 @@ namespace NetworkMonitor
         /// <param name="ipEndPoint"></param>
         public void Start(IPAddress ipAddr, IPEndPoint ipEndPoint) 
         {
-            if (Started) return;
+            if (Started)
+                throw new Exception("Start method is already running");
+            
             try
             {
                 using (mainSocket = new Socket(ipAddr.AddressFamily, SocketType.Raw, ProtocolType.IP))   // Используется сырой сокет. Требуются права администратора.
@@ -65,12 +66,9 @@ namespace NetworkMonitor
             }
         }
 
-        // Запуск мониторинга в асинхронном режиме.
-        public async Task StartAsync(IPAddress ipAddr, IPEndPoint ipEndPoint)
-        {
-            await Task.Run(() => Start(ipAddr, ipEndPoint));
-        }
-
+        /// <summary>
+        /// Остановка мониторинга.
+        /// </summary>
         public void Stop()
         {
             Started = false;  
@@ -82,9 +80,7 @@ namespace NetworkMonitor
         /// <param name="packet"></param>
         void OnPacketReceivedEvent (PacketIP packet)
         {
-            PackedRecived pr;
-            lock(this) { pr = PacketReceivedEvent; }
-            if (pr != null) pr(packet);
+            if (PacketReceivedEvent != null) PacketReceivedEvent(packet);
         }
     }
 }

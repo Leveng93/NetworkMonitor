@@ -4,6 +4,9 @@ using System.IO;
 
 namespace NetworkMonitor.Packets
 {
+    /// <summary>
+    /// IP пакет, содержащий в себе заголовок и данные.
+    /// </summary>
     class PacketIP
     {
         Byte versionAndHeaderLength;    // Версия протокола IP (первые 4 бита) + длина заголовка (следующие 4 бита).
@@ -17,14 +20,18 @@ namespace NetworkMonitor.Packets
         UInt32 sourceIP;                // Адрес источника. (4 байта).
         UInt32 destIP;                  // Адрес получателя. (4 байта).
 
-        Byte[] data;                    // Данные IP пакета.
+        Byte[] data;                    // Сообщение, содержащееся после заголовка.
 
         Byte headerLength;              // Длина заголовка.
-        UInt16 messageLength;            // Длина сообщения.
-
-
+        UInt16 messageLength;           // Длина сообщения.
+        
         PacketIP() { }
 
+        /// <summary>
+        /// Инициализирует новый экземпляр класса PacketIP.
+        /// </summary>
+        /// <param name="Buffer">Массив байт для парсинга</param>
+        /// <param name="Received">Количество байт в массиве</param>
         public PacketIP(Byte[] Buffer, Int32 Received)
         {
             using (MemoryStream memoryStream = new MemoryStream(Buffer, 0, Received))
@@ -44,7 +51,7 @@ namespace NetworkMonitor.Packets
                 headerLength = versionAndHeaderLength;
                 headerLength <<= 4;
                 headerLength >>= 4;
-                headerLength *= 4;
+                headerLength *= 4;  // Т.к. поле headerLength содержит в себе количество 32х-битных слов, домножаем на 4, чтобы получить количество байт.
 
                 messageLength = (UInt16)(totalLen - headerLength);
 
@@ -53,6 +60,9 @@ namespace NetworkMonitor.Packets
             }
         }
 
+        /// <summary>
+        /// Версия протокола.
+        /// </summary>
         public String Version
         {
             get

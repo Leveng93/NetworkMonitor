@@ -1,21 +1,26 @@
 ﻿using System;
 using System.IO;
 using System.Net;
-using System.Text;
 
 namespace NetworkMonitor.Packets
 {
+    /// <summary>
+    /// Флаги TCP пакета.
+    /// </summary>
     [Flags]
     public enum FlagsTCP : UInt16
     {
-        FYN = 1,    // Флаг окончания передачи со стороны отправителя.
+        FYN = 1,    // Флаг окончания передачи со стороны отправителя. Нулевой бит.
         SYN = 2,    // Синхронизация чисел последовательности.
         RST = 4,    // Переустановка соединения.
         PSH = 8,    // Флаг форсированной отправки.
         ACK = 16,   // Флаг пакета, содержащего подтверждение получения.
-        URG = 32    // Флаг срочности.        
+        URG = 32    // Флаг срочности. Пятый бит.      
     }
 
+    /// <summary>
+    /// TCP пакет, содержащий в себе заголовок и данные.
+    /// </summary>
     class PacketTCP
     {
         UInt16 sourcePort;              // Порт источника. 2 байта.
@@ -31,12 +36,21 @@ namespace NetworkMonitor.Packets
         Byte headerLength;              // Длина заголовка.
         UInt16 messageLength;           // Длина сообщения.
 
-        FlagsTCP flags;
+        FlagsTCP flags;                 // Флаги TCP пакета.
 
-        byte[] data;
+        byte[] data;                    // Сообщение, содержащееся после заголовка.
 
+        /// <summary>
+        /// Инициализирует новый экземпляр класса PacketTCP.
+        /// </summary>
+        /// <param name="PackIP">Экземпляр класса PacketIP</param>
         public PacketTCP(PacketIP PackIP) : this(PackIP.Data, PackIP.MessageLength) { }
 
+        /// <summary>
+        /// Инициализирует новый экземпляр класса PacketTCP.
+        /// </summary>
+        /// <param name="Buffer">Массив байт для парсинга</param>
+        /// <param name="Received">Количество байт в массиве</param>
         public PacketTCP(Byte[] Buffer, Int32 Received)
         {
             using (MemoryStream memoryStream = new MemoryStream(Buffer, 0, Received))
@@ -52,13 +66,13 @@ namespace NetworkMonitor.Packets
                 urgentPointer = (UInt16)IPAddress.NetworkToHostOrder(binaryReader.ReadInt16());
                 optionsAndPading = (UInt32)IPAddress.NetworkToHostOrder(binaryReader.ReadInt32());
 
-                headerLength = (Byte)(dataOffsetAndFlags >> 12);
-                headerLength *= 4;
+                headerLength = (Byte)(dataOffsetAndFlags >> 12); // Первые 4 байта в переменной - количество 32х-битных слов.
+                headerLength *= 4;  // Переводим в байты.
 
                 messageLength = (UInt16)(Received - headerLength);
 
-                UInt16 fl = (UInt16)(dataOffsetAndFlags << 10);
-                fl >>= 10;
+                // Записываем в отдельную переменную флаги TCP пакета.
+                UInt16 fl = (UInt16)(dataOffsetAndFlags & 0x3F);    // Маска 111111 в двоичной.
                 flags = (FlagsTCP)fl;                
                 
                 data = new byte[messageLength];
@@ -90,6 +104,9 @@ namespace NetworkMonitor.Packets
             get { return sequenceNumber; }
         }
 
+        /// <summary>
+        /// Поле номера кадра подтвержденного получения.
+        /// </summary>
         public UInt32 AcknowledgmentNumber
         {
             get
@@ -100,6 +117,9 @@ namespace NetworkMonitor.Packets
             }
         }
 
+        /// <summary>
+        /// Поле величины смещения данных. Оно содержит количество 32-битных слов заголовка TCP-пакета.
+        /// </summary>
         public Int32 DataOffset
         {
             get { return dataOffsetAndFlags >> 12; }
@@ -110,16 +130,25 @@ namespace NetworkMonitor.Packets
             get { return string.Format("{0}", flags); }
         }
 
+        /// <summary>
+        /// Окно. Содержит количество байт данных, которое отправитель данного сегмента может принять, отсчитанное от номера байта, указанного в поле Acknowledgment Number.
+        /// </summary>
         public UInt16 Window
         {
             get { return window; }
         }
 
-        public Int16 Checksum
+        /// <summary>
+        /// Контрольная сумма.
+        /// </summary>
+        public String Checksum
         {
-            get { return checksum; }
+            get { return "0x" + checksum.ToString("x"); }
         }
 
+        /// <summary>
+        /// Поле указателя срочных данных. Это поле содержит значение счетчика пакетов, начиная с которого следуют пакеты повышенной срочности.
+        /// </summary>
         public UInt16 UrgentPointer
         {
             get
@@ -130,21 +159,35 @@ namespace NetworkMonitor.Packets
             }
         }
 
+        /// <summary>
+        /// Длина заголовка TCP пакета в байтах.
+        /// </summary>
         public Byte HeaderLength
         {
             get { return headerLength; }
         }
 
+        /// <summary>
+        /// Длина сообщения в байтах.
+        /// </summary>
         public UInt16 MessageLength
         {
             get { return messageLength; }
         }
 
+        /// <summary>
+        /// Данные сообщения.
+        /// </summary>
         public Byte[] Data
         {
             get { return data; }
         }
 
+        /// <summary>
+        /// Метод, показывающий, содержится ли в данном пакете переданный битовый флаг.
+        /// </summary>
+        /// <param name="flag"></param>
+        /// <returns></returns>
         public bool HasFlag (FlagsTCP flag)
         {
             return flags.HasFlag(flag);
