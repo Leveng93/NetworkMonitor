@@ -62,7 +62,7 @@ namespace NetworkMonitor.Packets
                 acknowledgmentNumber = (UInt32)IPAddress.NetworkToHostOrder(binaryReader.ReadInt32());
                 dataOffsetAndFlags = (UInt16)IPAddress.NetworkToHostOrder(binaryReader.ReadInt16());
                 window = (UInt16)IPAddress.NetworkToHostOrder(binaryReader.ReadInt16());
-                checksum = (Int16)IPAddress.NetworkToHostOrder(binaryReader.ReadInt16());
+                checksum = IPAddress.NetworkToHostOrder(binaryReader.ReadInt16());
                 urgentPointer = (UInt16)IPAddress.NetworkToHostOrder(binaryReader.ReadInt16());
                 optionsAndPading = (UInt32)IPAddress.NetworkToHostOrder(binaryReader.ReadInt32());
 

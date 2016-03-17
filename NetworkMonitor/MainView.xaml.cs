@@ -7,7 +7,7 @@ namespace NetworkMonitor
     /// </summary>
     public partial class MainWindow : Window
     {
-        NetworkDataMonitor monitor = NetworkDataMonitor.Instance;
+        NetworkPacketsReceiver monitor = NetworkPacketsReceiver.Instance;
         public MainWindow()
         {
             InitializeComponent();

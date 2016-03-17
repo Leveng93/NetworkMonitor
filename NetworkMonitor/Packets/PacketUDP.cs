@@ -35,7 +35,7 @@ namespace NetworkMonitor.Packets
                 sourcePort = (UInt16)IPAddress.NetworkToHostOrder(binaryReader.ReadInt16());
                 destinationPort = (UInt16)IPAddress.NetworkToHostOrder(binaryReader.ReadInt16());
                 totalLength = (UInt16)IPAddress.NetworkToHostOrder(binaryReader.ReadInt16());
-                checksum = (Int16)IPAddress.NetworkToHostOrder(binaryReader.ReadInt16());
+                checksum = IPAddress.NetworkToHostOrder(binaryReader.ReadInt16());
 
                 data = new byte[totalLength - 8];
                 Array.Copy(Buffer, 8, data, 0, data.Length);

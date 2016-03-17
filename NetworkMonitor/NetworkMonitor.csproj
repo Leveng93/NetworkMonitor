@@ -63,6 +63,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Packets\PacketICMP.cs" />
     <Compile Include="Packets\PacketIP.cs" />
     <Compile Include="MainView.xaml.cs">
       <DependentUpon>MainView.xaml</DependentUpon>
@@ -71,7 +72,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MainViewModel.cs" />
-    <Compile Include="NetworkDataMonitor.cs" />
+    <Compile Include="NetworkPacketsReceiver.cs" />
     <Compile Include="Packets\PacketTCP.cs" />
     <Compile Include="Packets\PacketUDP.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">

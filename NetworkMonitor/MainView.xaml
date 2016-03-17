@@ -6,5 +6,48 @@
         xmlns:local="clr-namespace:NetworkMonitor"
         mc:Ignorable="d"
         Title="Network monitor" Height="350" Width="525">
-    <Grid/>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="3" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <GridSplitter Grid.Row="2" Height="3" HorizontalAlignment="Stretch" />
+
+        <DockPanel Grid.Row="0">
+            <StackPanel Orientation="Horizontal">
+                <Button Margin="5,0,5,0">Start</Button>
+                <Button Margin="5,0,5,0">Stop</Button>
+                <Button Margin="5,0,5,0">Clear</Button>
+            </StackPanel>
+        </DockPanel>
+        
+        <ListView Grid.Row="1" Name="lstw" Margin="3">
+            <ListView.View>
+                <GridView>
+                    <GridView.Columns>
+                        <GridViewColumn Header="№" Width="40"></GridViewColumn>
+                        <GridViewColumn Header="Time" Width="50"></GridViewColumn>
+                        <GridViewColumn Header="Source" Width="80"></GridViewColumn>
+                        <GridViewColumn Header="Destination" Width="80"></GridViewColumn>
+                        <GridViewColumn Header="Protocol" Width="80"></GridViewColumn>
+                        <GridViewColumn Header="Length" Width="80"></GridViewColumn>
+                        <GridViewColumn Header="Info" Width="80"></GridViewColumn>
+                    </GridView.Columns>
+                </GridView>
+            </ListView.View>
+        </ListView>
+
+        <Grid Grid.Row="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="3" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <GridSplitter Grid.Column="1" Width="3" HorizontalAlignment="Stretch" />
+
+        </Grid>
+
+    </Grid>
 </Window>

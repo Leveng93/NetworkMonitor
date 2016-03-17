@@ -11,7 +11,7 @@ namespace NetworkMonitor
 {
     class MainViewModel
     {
-        NetworkDataMonitor monitor = NetworkDataMonitor.Instance;
+        NetworkPacketsReceiver monitor = NetworkPacketsReceiver.Instance;
 
         public async void StartNetworkMonitor ()
         {
