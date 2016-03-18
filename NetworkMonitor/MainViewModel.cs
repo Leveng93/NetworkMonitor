@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,12 +7,21 @@ using System.Threading.Tasks;
 using System.Net.Sockets;
 using System.Net;
 using System.Windows;
+using NetworkMonitor.Packets;
 
 namespace NetworkMonitor
 {
     class MainViewModel
     {
-        NetworkPacketsReceiver monitor = NetworkPacketsReceiver.Instance;
+        NetworkPacketsReceiver packetsReceiver;
+        ObservableCollection<PacketIP> packets;
+
+        public MainViewModel()
+        {
+            packetsReceiver = NetworkPacketsReceiver.Instance;
+            packets = new ObservableCollection<PacketIP>();
+            packetsReceiver.PacketReceivedEvent += OnPacketReceived;
+        }
 
         public async void StartNetworkMonitor ()
         {
@@ -21,9 +31,14 @@ namespace NetworkMonitor
 
             try
             {
-                await Task.Run(() => monitor.Start(ipAddr, ipEndPoint));
+                await Task.Run(() => packetsReceiver.Start(ipAddr, ipEndPoint));
             }
             catch (Exception ex) { MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK); }
+        }
+
+        void OnPacketReceived(PacketIP packet)
+        {
+            packets.Add(packet);
         }
     }
 }
