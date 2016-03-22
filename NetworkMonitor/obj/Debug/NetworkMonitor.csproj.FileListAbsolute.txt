@@ -15,3 +15,4 @@ c:\users\ogore\documents\visual studio 2015\Projects\NetworkMonitor\NetworkMonit
 D:\Ogore\OneDrive\Documents\Visual Studio 2015\Projects\NetworkMonitor\NetworkMonitor\bin\Debug\NetworkMonitor.exe.config
 D:\Ogore\OneDrive\Documents\Visual Studio 2015\Projects\NetworkMonitor\NetworkMonitor\obj\Debug\NetworkMonitor.exe
 D:\Ogore\OneDrive\Documents\Visual Studio 2015\Projects\NetworkMonitor\NetworkMonitor\obj\Debug\NetworkMonitor.pdb
+C:\Users\Ogore\documents\visual studio 2015\Projects\NetworkMonitor\NetworkMonitor\obj\Debug\GeneratedInternalTypeHelper.g.cs

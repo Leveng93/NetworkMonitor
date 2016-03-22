@@ -10,8 +10,7 @@ namespace NetworkMonitor
     /// </summary>
     sealed class NetworkPacketsReceiver
     {
-        public delegate void PackedRecived(PacketIP packet);
-        public event PackedRecived PacketReceivedEvent = delegate { };
+        public event Action<PacketIP> PacketReceivedEvent = delegate { };
 
         Socket mainSocket;  // Основной сокет.
         byte[] buffer;      // Буффер, в который считывается пакет.

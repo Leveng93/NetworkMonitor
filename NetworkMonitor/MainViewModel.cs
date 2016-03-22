@@ -8,19 +8,25 @@ using System.Net.Sockets;
 using System.Net;
 using System.Windows;
 using NetworkMonitor.Packets;
+using System.Windows.Input;
+using System.Windows.Threading;
 
 namespace NetworkMonitor
 {
     class MainViewModel
     {
+        Dispatcher dispatcher;
         NetworkPacketsReceiver packetsReceiver;
-        ObservableCollection<PacketIP> packets;
+        public ObservableCollection<PacketIP> Packets { get; set; }
+        public ICommand MonitorStartCommand { get; set; }
 
         public MainViewModel()
         {
+            dispatcher = Dispatcher.CurrentDispatcher;
             packetsReceiver = NetworkPacketsReceiver.Instance;
-            packets = new ObservableCollection<PacketIP>();
+            Packets = new ObservableCollection<PacketIP>();
             packetsReceiver.PacketReceivedEvent += OnPacketReceived;
+            MonitorStartCommand = new RelayCommand(arg => StartNetworkMonitor());
         }
 
         public async void StartNetworkMonitor ()
@@ -38,7 +44,7 @@ namespace NetworkMonitor
 
         void OnPacketReceived(PacketIP packet)
         {
-            packets.Add(packet);
+            dispatcher.Invoke(new Action( ()=> Packets.Add(packet) ) );
         }
     }
 }

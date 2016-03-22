@@ -6,6 +6,9 @@
         xmlns:local="clr-namespace:NetworkMonitor"
         mc:Ignorable="d"
         Title="Network monitor" Height="350" Width="525">
+    <Window.DataContext>
+        <local:MainViewModel/>
+    </Window.DataContext>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -17,22 +20,22 @@
 
         <DockPanel Grid.Row="0">
             <StackPanel Orientation="Horizontal">
-                <Button Margin="5,0,5,0">Start</Button>
+                <Button Command="{Binding MonitorStartCommand}" Margin="5,0,5,0">Start</Button>
                 <Button Margin="5,0,5,0">Stop</Button>
                 <Button Margin="5,0,5,0">Clear</Button>
             </StackPanel>
         </DockPanel>
         
-        <ListView Grid.Row="1" Name="lstw" Margin="3">
+        <ListView ItemsSource="{Binding Path=Packets, Mode=TwoWay}" Grid.Row="1" Name="lstw" Margin="3">
             <ListView.View>
                 <GridView>
                     <GridView.Columns>
                         <GridViewColumn Header="№" Width="40"></GridViewColumn>
                         <GridViewColumn Header="Time" Width="50"></GridViewColumn>
-                        <GridViewColumn Header="Source" Width="80"></GridViewColumn>
-                        <GridViewColumn Header="Destination" Width="80"></GridViewColumn>
-                        <GridViewColumn Header="Protocol" Width="80"></GridViewColumn>
-                        <GridViewColumn Header="Length" Width="80"></GridViewColumn>
+                        <GridViewColumn Header="Source" DisplayMemberBinding="{Binding Path=SourceIP}" Width="80"></GridViewColumn>
+                        <GridViewColumn Header="Destination" DisplayMemberBinding="{Binding Path=DestinationIP}" Width="80"></GridViewColumn>
+                        <GridViewColumn Header="Protocol" DisplayMemberBinding="{Binding Path=Protocol}" Width="80"></GridViewColumn>
+                        <GridViewColumn Header="Length" DisplayMemberBinding="{Binding Path=MessageLength}" Width="80"></GridViewColumn>
                         <GridViewColumn Header="Info" Width="80"></GridViewColumn>
                     </GridView.Columns>
                 </GridView>
