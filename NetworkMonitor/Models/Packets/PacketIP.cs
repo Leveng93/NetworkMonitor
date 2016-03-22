@@ -2,7 +2,7 @@
 using System.Net;
 using System.IO;
 
-namespace NetworkMonitor.Packets
+namespace NetworkMonitor.Models.Packets
 {
     /// <summary>
     /// IP пакет, содержащий в себе заголовок и данные.

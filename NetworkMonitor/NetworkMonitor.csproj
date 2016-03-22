@@ -55,27 +55,20 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Models\INetworkPacketsReceiver.cs" />
     <Compile Include="RelayCommand.cs" />
-    <Page Include="MainView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Packets\PacketICMP.cs" />
-    <Compile Include="Packets\PacketIP.cs" />
-    <Compile Include="MainView.xaml.cs">
-      <DependentUpon>MainView.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="Models\Packets\PacketICMP.cs" />
+    <Compile Include="Models\Packets\PacketIP.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MainViewModel.cs" />
-    <Compile Include="NetworkPacketsReceiver.cs" />
-    <Compile Include="Packets\PacketTCP.cs" />
-    <Compile Include="Packets\PacketUDP.cs" />
+    <Compile Include="ViewModels\MainViewModel.cs" />
+    <Compile Include="Models\NetworkPacketsReceiver.cs" />
+    <Compile Include="Models\Packets\PacketTCP.cs" />
+    <Compile Include="Models\Packets\PacketUDP.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -101,6 +94,15 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="MainView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Views\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -4,10 +4,11 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:NetworkMonitor"
+        xmlns:viewModel="clr-namespace:NetworkMonitor.ViewModels"
         mc:Ignorable="d"
         Title="Network monitor" Height="350" Width="525">
     <Window.DataContext>
-        <local:MainViewModel/>
+        <viewModel:MainViewModel/>
     </Window.DataContext>
     <Grid>
         <Grid.RowDefinitions>
@@ -20,9 +21,9 @@
 
         <DockPanel Grid.Row="0">
             <StackPanel Orientation="Horizontal">
-                <Button Command="{Binding MonitorStartCommand}" Margin="5,0,5,0">Start</Button>
-                <Button Margin="5,0,5,0">Stop</Button>
-                <Button Margin="5,0,5,0">Clear</Button>
+                <Button Command="{Binding MonitorStart}" Margin="5,0,5,0">Start</Button>
+                <Button Command="{Binding MonitorStop}" Margin="5,0,5,0">Stop</Button>
+                <Button Command="{Binding PacketCollectionClear}" Margin="5,0,5,0">Clear</Button>
             </StackPanel>
         </DockPanel>
         

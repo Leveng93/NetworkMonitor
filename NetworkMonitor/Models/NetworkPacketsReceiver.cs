@@ -1,14 +1,15 @@
-﻿using NetworkMonitor.Packets;
+﻿using NetworkMonitor.Models.Packets;
 using System;
 using System.Net;
 using System.Net.Sockets;
+using System.Threading.Tasks;
 
-namespace NetworkMonitor
+namespace NetworkMonitor.Models
 {
     /// <summary>
     /// Класс, предоставляющий данные о мониторинге сети. Синглтон.
     /// </summary>
-    sealed class NetworkPacketsReceiver
+    sealed class NetworkPacketsReceiver : INetworkPacketsReceiver
     {
         public event Action<PacketIP> PacketReceivedEvent = delegate { };
 
@@ -29,11 +30,11 @@ namespace NetworkMonitor
         public static NetworkPacketsReceiver Instance { get { return _instance.Value; } }
 
         /// <summary>
-        /// Запуск мониторинга в синхронном режиме.
+        /// Запуск мониторинга в асинхронном режиме.
         /// </summary>
         /// <param name="ipAddr"></param>
         /// <param name="ipEndPoint"></param>
-        public void Start(IPAddress ipAddr, IPEndPoint ipEndPoint) 
+        public async Task StartAsync(IPAddress ipAddr, IPEndPoint ipEndPoint) 
         {
             if (Started)
                 throw new Exception("Start method is already running");
@@ -52,12 +53,13 @@ namespace NetworkMonitor
                     Started = true;
                     while (Started)
                     {
-                        int received = mainSocket.Receive(buffer, 0, buffer.Length, SocketFlags.None);  // Считываем пакет в буффер.
+                        int received = await Task.Factory.FromAsync(mainSocket.BeginReceive(buffer, 0, buffer.Length, SocketFlags.None, null, null), mainSocket.EndReceive);    // Считываем пакет в буффер.
                         PacketReceivedEvent(new PacketIP(buffer, received));  // Создаем новый IP пакет, запускаем событие (рассылаем пакет подписчикам).
                         Array.Clear(buffer, 0, received); // Очищаем буффер.
                     }
                 }
             }
+            catch (ObjectDisposedException) { } // Возникает при принудительном закрытии сокета методом Close().
             finally
             {
                 Array.Clear(buffer, 0, buffer.Length);
@@ -70,8 +72,7 @@ namespace NetworkMonitor
         /// </summary>
         public void Stop()
         {
-            Started = false;
-            mainSocket.Close();  
+            if (Started) mainSocket.Close();                      
         }
     }
 }

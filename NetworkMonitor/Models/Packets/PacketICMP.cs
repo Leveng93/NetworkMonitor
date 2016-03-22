@@ -2,7 +2,7 @@
 using System.IO;
 using System.Net;
 
-namespace NetworkMonitor.Packets
+namespace NetworkMonitor.Models.Packets
 {
     class PacketICMP
     {

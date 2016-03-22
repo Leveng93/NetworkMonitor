@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using NetworkMonitor.Models;
 
 namespace NetworkMonitor
 {

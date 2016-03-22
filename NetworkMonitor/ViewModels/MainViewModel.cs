@@ -1,32 +1,30 @@
-﻿using System;
+﻿using NetworkMonitor.Models;
+using NetworkMonitor.Models.Packets;
+using System;
 using System.Collections.ObjectModel;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Net.Sockets;
 using System.Net;
 using System.Windows;
-using NetworkMonitor.Packets;
 using System.Windows.Input;
-using System.Windows.Threading;
 
-namespace NetworkMonitor
+namespace NetworkMonitor.ViewModels
 {
     class MainViewModel
     {
-        Dispatcher dispatcher;
-        NetworkPacketsReceiver packetsReceiver;
+        INetworkPacketsReceiver packetsReceiver;
+        public int PacketsReceivedCount { get; private set; }
         public ObservableCollection<PacketIP> Packets { get; set; }
-        public ICommand MonitorStartCommand { get; set; }
-
+        public ICommand MonitorStart { get; set; }
+        public ICommand MonitorStop { get; set; }
+        public ICommand PacketCollectionClear { get; set; }
+        
         public MainViewModel()
         {
-            dispatcher = Dispatcher.CurrentDispatcher;
             packetsReceiver = NetworkPacketsReceiver.Instance;
             Packets = new ObservableCollection<PacketIP>();
             packetsReceiver.PacketReceivedEvent += OnPacketReceived;
-            MonitorStartCommand = new RelayCommand(arg => StartNetworkMonitor());
+            MonitorStart = new RelayCommand(arg => StartNetworkMonitor());
+            MonitorStop = new RelayCommand(arg => StopNetworkMonitor());
+            PacketCollectionClear = new RelayCommand(arg => Packets.Clear());
         }
 
         public async void StartNetworkMonitor ()
@@ -37,14 +35,20 @@ namespace NetworkMonitor
 
             try
             {
-                await Task.Run(() => packetsReceiver.Start(ipAddr, ipEndPoint));
+                await packetsReceiver.StartAsync(ipAddr, ipEndPoint);
             }
             catch (Exception ex) { MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK); }
         }
 
+        public void StopNetworkMonitor ()
+        {
+            packetsReceiver.Stop();
+        }
+
         void OnPacketReceived(PacketIP packet)
         {
-            dispatcher.Invoke(new Action( ()=> Packets.Add(packet) ) );
+            Packets.Add(packet);
+            PacketsReceivedCount++;
         }
     }
 }
