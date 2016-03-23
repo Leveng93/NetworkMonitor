@@ -13,8 +13,8 @@ namespace NetworkMonitor.Models
     {
         public event Action<PacketIP> PacketReceivedEvent = delegate { };
 
-        Socket mainSocket;  // Основной сокет.
-        byte[] buffer;      // Буффер, в который считывается пакет.
+        Socket _mainSocket;  // Основной сокет.
+        byte[] _buffer;      // Буффер, в который считывается пакет.
 
         /// <summary>
         /// Отображение состояния сетевого монитора.
@@ -41,28 +41,28 @@ namespace NetworkMonitor.Models
             
             try
             {
-                using (mainSocket = new Socket(ipAddr.AddressFamily, SocketType.Raw, ProtocolType.IP))   // Используется сырой сокет. Требуются права администратора.
+                using (_mainSocket = new Socket(ipAddr.AddressFamily, SocketType.Raw, ProtocolType.IP))   // Используется сырой сокет. Требуются права администратора.
                 {
-                    buffer = new byte[mainSocket.ReceiveBufferSize];    // Размер буффера равен размеру внутреннего буффера сокета.
-                    mainSocket.Bind(ipEndPoint);
-                    mainSocket.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.HeaderIncluded, true);
+                    _buffer = new byte[_mainSocket.ReceiveBufferSize];    // Размер буффера равен размеру внутреннего буффера сокета.
+                    _mainSocket.Bind(ipEndPoint);
+                    _mainSocket.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.HeaderIncluded, true);
                     byte[] optionIn = new byte[4] { 1, 0, 0, 0 };
                     byte[] optionOut = new byte[4];
-                    mainSocket.IOControl(IOControlCode.ReceiveAll, optionIn, optionOut);
+                    _mainSocket.IOControl(IOControlCode.ReceiveAll, optionIn, optionOut);
 
                     Started = true;
                     while (Started)
                     {
-                        int received = await Task.Factory.FromAsync(mainSocket.BeginReceive(buffer, 0, buffer.Length, SocketFlags.None, null, null), mainSocket.EndReceive);    // Считываем пакет в буффер.
-                        PacketReceivedEvent(new PacketIP(buffer, received));  // Создаем новый IP пакет, запускаем событие (рассылаем пакет подписчикам).
-                        Array.Clear(buffer, 0, received); // Очищаем буффер.
+                        int received = await Task.Factory.FromAsync(_mainSocket.BeginReceive(_buffer, 0, _buffer.Length, SocketFlags.None, null, null), _mainSocket.EndReceive);    // Считываем пакет в буффер.
+                        PacketReceivedEvent(new PacketIP(_buffer, received));  // Создаем новый IP пакет, запускаем событие (рассылаем пакет подписчикам).
+                        Array.Clear(_buffer, 0, received); // Очищаем буффер.
                     }
                 }
             }
             catch (ObjectDisposedException) { } // Возникает при принудительном закрытии сокета методом Close().
             finally
             {
-                Array.Clear(buffer, 0, buffer.Length);
+                Array.Clear(_buffer, 0, _buffer.Length);
                 Started = false;
             }
         }
@@ -72,7 +72,7 @@ namespace NetworkMonitor.Models
         /// </summary>
         public void Stop()
         {
-            if (Started) mainSocket.Close();                      
+            if (Started) _mainSocket.Close();                      
         }
     }
 }

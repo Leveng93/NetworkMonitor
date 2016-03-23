@@ -8,12 +8,23 @@ using System.Windows.Input;
 
 namespace NetworkMonitor.ViewModels
 {
-    class MainViewModel
+    class MainViewModel : ViewModelBase
     {
         #region FieldsAndProps
 
         INetworkPacketsReceiver _packetsReceiver;
         public ObservableCollection<PacketIP> Packets { get; set; }
+
+        int _packetsReceivedCount;
+        public int PacketsReceivedCount
+        {
+            get { return _packetsReceivedCount; }
+            set
+            {
+                _packetsReceivedCount = value;
+                OnPropertyChanged("PacketsReceivedCount");
+            }
+        }
 
         #endregion // FieldsAndProps
 
@@ -89,7 +100,7 @@ namespace NetworkMonitor.ViewModels
         void OnPacketReceived(PacketIP packet)
         {
             Packets.Add(packet);
-
+            PacketsReceivedCount++;
         }
 
         #endregion // Methods
