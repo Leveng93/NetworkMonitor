@@ -10,22 +10,63 @@ namespace NetworkMonitor.ViewModels
 {
     class MainViewModel
     {
-        INetworkPacketsReceiver packetsReceiver;
-        public int PacketsReceivedCount { get; private set; }
+        #region FieldsAndProps
+
+        INetworkPacketsReceiver _packetsReceiver;
         public ObservableCollection<PacketIP> Packets { get; set; }
-        public ICommand MonitorStart { get; set; }
-        public ICommand MonitorStop { get; set; }
-        public ICommand PacketCollectionClear { get; set; }
-        
+
+        #endregion // FieldsAndProps
+
+        #region Commands
+
+        RelayCommand _monitorStart;
+        public ICommand MonitorStart
+        {
+            get
+            {
+                if (_monitorStart == null)
+                    _monitorStart = new RelayCommand(arg => StartNetworkMonitor());
+                
+                return _monitorStart;
+            }
+        }
+
+        RelayCommand _monitorStop;
+        public ICommand MonitorStop
+        {
+            get
+            {
+                if (_monitorStop == null)
+                    _monitorStop = new RelayCommand(arg => StopNetworkMonitor());
+                return _monitorStop;
+            }
+        }
+
+        RelayCommand _clearPacketCollection;
+        public ICommand ClearPacketCollection
+        {
+            get
+            {
+                if (_clearPacketCollection == null)
+                    _clearPacketCollection = new RelayCommand(arg => Packets.Clear());
+                return _clearPacketCollection;
+            }
+        }
+
+        #endregion // Commands
+
+        #region Constructors
+
         public MainViewModel()
         {
-            packetsReceiver = NetworkPacketsReceiver.Instance;
+            _packetsReceiver = NetworkPacketsReceiver.Instance;
             Packets = new ObservableCollection<PacketIP>();
-            packetsReceiver.PacketReceivedEvent += OnPacketReceived;
-            MonitorStart = new RelayCommand(arg => StartNetworkMonitor());
-            MonitorStop = new RelayCommand(arg => StopNetworkMonitor());
-            PacketCollectionClear = new RelayCommand(arg => Packets.Clear());
+            _packetsReceiver.PacketReceivedEvent += OnPacketReceived;
         }
+
+        #endregion // Constructors
+
+        #region Methods
 
         public async void StartNetworkMonitor ()
         {
@@ -35,20 +76,22 @@ namespace NetworkMonitor.ViewModels
 
             try
             {
-                await packetsReceiver.StartAsync(ipAddr, ipEndPoint);
+                await _packetsReceiver.StartAsync(ipAddr, ipEndPoint);
             }
             catch (Exception ex) { MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK); }
         }
 
         public void StopNetworkMonitor ()
         {
-            packetsReceiver.Stop();
+            _packetsReceiver.Stop();
         }
 
         void OnPacketReceived(PacketIP packet)
         {
             Packets.Add(packet);
-            PacketsReceivedCount++;
+
         }
+
+        #endregion // Methods
     }
 }

@@ -5,32 +5,45 @@ namespace NetworkMonitor
 {
     class RelayCommand : ICommand
     {
-        public RelayCommand(Action<object> action)
+        #region Fields
+
+        readonly Action<object> _execute;
+        readonly Predicate<object> _canExecute;
+
+        #endregion  // Fields
+
+        #region Constructors
+
+        public RelayCommand(Action<object> execute) : this(execute, null) { }
+
+        public RelayCommand(Action<object> execute, Predicate<object> canExecute)
         {
-            ExecuteDelegate = action;
+            if (execute == null) throw new ArgumentNullException("execute");
+
+            _execute = execute;
+            _canExecute = canExecute;            
         }
-        public Predicate<object> CanExecuteDelegate { get; set; }
-        public Action<object> ExecuteDelegate { get; set; }
+
+        #endregion  // Constructors
+
+        #region ICommand Members
 
         public bool CanExecute(object parameter)
         {
-            if (CanExecuteDelegate != null)
-            {
-                return CanExecuteDelegate(parameter);
-            }
-            return true;
+            return _canExecute == null ? true : _canExecute(false);
         }
+
         public event EventHandler CanExecuteChanged
         {
             add { CommandManager.RequerySuggested += value; }
             remove { CommandManager.RequerySuggested -= value; }
         }
-        public void Execute(object parameter)
+
+        public void Execute (object parameter)
         {
-            if (ExecuteDelegate != null)
-            {
-                ExecuteDelegate(parameter);
-            }
+            _execute(parameter);
         }
+
+        #endregion  // ICommand Members
     }
 }

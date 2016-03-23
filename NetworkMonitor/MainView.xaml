@@ -23,7 +23,7 @@
             <StackPanel Orientation="Horizontal">
                 <Button Command="{Binding MonitorStart}" Margin="5,0,5,0">Start</Button>
                 <Button Command="{Binding MonitorStop}" Margin="5,0,5,0">Stop</Button>
-                <Button Command="{Binding PacketCollectionClear}" Margin="5,0,5,0">Clear</Button>
+                <Button Command="{Binding ClearPacketCollection}" Margin="5,0,5,0">Clear</Button>
             </StackPanel>
         </DockPanel>
         
