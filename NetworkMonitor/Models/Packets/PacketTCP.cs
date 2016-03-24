@@ -23,6 +23,8 @@ namespace NetworkMonitor.Models.Packets
     /// </summary>
     class PacketTCP
     {
+        #region Fields
+
         UInt16 sourcePort;              // Порт источника. 2 байта.
         UInt16 destinationPort;         // Порт назначения. 2 байта.
         UInt32 sequenceNumber;          // Последовательный номер. 4 байта. Указывает номер байта, который определяет смещение сегмента относительно потока отправляемых данных.
@@ -39,6 +41,10 @@ namespace NetworkMonitor.Models.Packets
         FlagsTCP flags;                 // Флаги TCP пакета.
 
         byte[] data;                    // Сообщение, содержащееся после заголовка.
+
+        #endregion // Fields
+
+        #region Constructors
 
         /// <summary>
         /// Инициализирует новый экземпляр класса PacketTCP.
@@ -79,6 +85,10 @@ namespace NetworkMonitor.Models.Packets
                 Array.Copy(Buffer, headerLength, data, 0, data.Length);
             }
         }
+
+        #endregion // Constructors
+
+        #region Properties
 
         /// <summary>
         /// Порт источника.
@@ -192,5 +202,7 @@ namespace NetworkMonitor.Models.Packets
         {
             return flags.HasFlag(flag);
         }
+
+        #endregion
     }
 }

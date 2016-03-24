@@ -9,12 +9,18 @@ namespace NetworkMonitor.Models.Packets
     /// </summary>
     class PacketUDP
     {
+        #region Fields
+
         UInt16 sourcePort;              // Порт источника. 2 байта.
         UInt16 destinationPort;         // Порт назначения. 2 байта.
         UInt16 totalLength;             // Общая длина UDP пакета. 2 байта.
         Int16 checksum;                 // Контрольная сумма. 2 байта.
 
         byte[] data;    // Сообщение, содержащееся после заголовка.
+
+        #endregion  // Fields
+
+        #region Constructors
 
         /// <summary>
         /// Инициализирует новый экземпляр класса PacketUDP.
@@ -41,6 +47,10 @@ namespace NetworkMonitor.Models.Packets
                 Array.Copy(Buffer, 8, data, 0, data.Length);
             }
         }
+
+        #endregion // Constructors
+
+        #region Properties
 
         /// <summary>
         /// Порт источника.
@@ -81,5 +91,7 @@ namespace NetworkMonitor.Models.Packets
         {
             get { return data; }
         }
+
+        #endregion // Properties
     }
 }

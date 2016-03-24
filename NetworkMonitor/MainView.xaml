@@ -16,6 +16,7 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="3" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
         <GridSplitter Grid.Row="2" Height="3" HorizontalAlignment="Stretch" />
 
@@ -26,19 +27,17 @@
                 <Button Command="{Binding ClearPacketCollection}">Clear</Button>
             </StackPanel>
         </DockPanel>
-        
-        <ListView ItemsSource="{Binding Path=Packets, Mode=OneWay}" Grid.Row="1" Name="lstw" Margin="3">
+
+        <ListView Grid.Row="1" x:Name="lstw" Margin="3" ItemsSource="{Binding Packets, Mode=OneWay}">
             <ListView.View>
                 <GridView>
-                    <GridView.Columns>
-                        <GridViewColumn Header="№" DisplayMemberBinding="{Binding PacketsReceivedCount, Mode=OneWay}" Width="auto"></GridViewColumn>
-                        <GridViewColumn Header="Time" Width="auto"></GridViewColumn>
-                        <GridViewColumn Header="Source" DisplayMemberBinding="{Binding SourceIP, Mode=OneWay}" Width="auto"></GridViewColumn>
-                        <GridViewColumn Header="Destination" DisplayMemberBinding="{Binding DestinationIP, Mode=OneWay}" Width="auto"></GridViewColumn>
-                        <GridViewColumn Header="Protocol" DisplayMemberBinding="{Binding Protocol, Mode=OneWay}" Width="auto"></GridViewColumn>
-                        <GridViewColumn Header="Length" DisplayMemberBinding="{Binding MessageLength, Mode=OneWay}" Width="auto"></GridViewColumn>
-                        <GridViewColumn Header="Info" Width="auto"></GridViewColumn>
-                    </GridView.Columns>
+                    <GridViewColumn Header="№" Width="auto" DisplayMemberBinding="{Binding _packetNumber}"/>
+                    <GridViewColumn Header="Time" Width="auto" DisplayMemberBinding="{Binding _receiveTime.Now, Mode=OneWay, StringFormat=HH:mm:ss}"/>
+                    <GridViewColumn Header="Source" Width="auto" DisplayMemberBinding="{Binding _packetIp.SourceIP, Mode=OneWay}"/>
+                    <GridViewColumn Header="Destination" Width="auto" DisplayMemberBinding="{Binding _packetIp.DestinationIP, Mode=OneWay}"/>
+                    <GridViewColumn Header="Protocol" Width="auto" DisplayMemberBinding="{Binding _packetIp.Protocol, Mode=OneWay}"/>
+                    <GridViewColumn Header="Length" Width="auto" DisplayMemberBinding="{Binding _packetIp.TotalLen, Mode=OneWay}"/>
+                    <GridViewColumn Header="Info" Width="auto"/>
                 </GridView>
             </ListView.View>
         </ListView>
@@ -50,8 +49,13 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
             <GridSplitter Grid.Column="1" Width="3" HorizontalAlignment="Stretch" />
-
         </Grid>
+
+        <DockPanel Grid.Row="4">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock HorizontalAlignment="Right" Text="{Binding}"></TextBlock>
+            </StackPanel>
+        </DockPanel>
 
     </Grid>
 </Window>

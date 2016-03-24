@@ -9,22 +9,28 @@ namespace NetworkMonitor.Models.Packets
     /// </summary>
     class PacketIP
     {
-        Byte versionAndHeaderLength;    // Версия протокола IP (первые 4 бита) + длина заголовка (следующие 4 бита).
-        Byte serviceType;               // Тип сервиса. Занимает 1 байт и задает приоритет дейтаграммы и желаемый тип маршрутизации.
-        UInt16 totalLen;                // Общая длина. Занимает 2 байта и указывает общую длину пакета с учетом заголовка и поля данных.
-        UInt16 id;                      // Идентификатор пакета. Занимает 2 байта и используется для распознавания пакетов, образовавшихся путем фрагментации исходного пакета.
-        UInt16 flagsAndOffset;          // Первые 3 бита - флаги фрагментации. Следующие 13 - смещение поля данных этого пакета от начала общего поля данных исходного пакета, подвергнутого фрагментации.
-        Byte ttl;                       // Время жизни пакета.
-        Byte protocol;                  // Протокол верхнего уровня. (TCP, UDP или RIP).
-        Int16 checksum;                 // Контрольная сумма заголовка. Занимает 2 байта, рассчитывается по всему заголовку.
-        UInt32 sourceIP;                // Адрес источника. (4 байта).
-        UInt32 destIP;                  // Адрес получателя. (4 байта).
+        #region Fields
 
-        Byte[] data;                    // Сообщение, содержащееся после заголовка.
+        Byte _versionAndHeaderLength;    // Версия протокола IP (первые 4 бита) + длина заголовка (следующие 4 бита).
+        Byte _serviceType;               // Тип сервиса. Занимает 1 байт и задает приоритет дейтаграммы и желаемый тип маршрутизации.
+        UInt16 _totalLen;                // Общая длина. Занимает 2 байта и указывает общую длину пакета с учетом заголовка и поля данных.
+        UInt16 _id;                      // Идентификатор пакета. Занимает 2 байта и используется для распознавания пакетов, образовавшихся путем фрагментации исходного пакета.
+        UInt16 _flagsAndOffset;          // Первые 3 бита - флаги фрагментации. Следующие 13 - смещение поля данных этого пакета от начала общего поля данных исходного пакета, подвергнутого фрагментации.
+        Byte _ttl;                       // Время жизни пакета.
+        Byte _protocol;                  // Протокол верхнего уровня. (TCP, UDP или RIP).
+        Int16 _checksum;                 // Контрольная сумма заголовка. Занимает 2 байта, рассчитывается по всему заголовку.
+        UInt32 _sourceIP;                // Адрес источника. (4 байта).
+        UInt32 _destIP;                  // Адрес получателя. (4 байта).
 
-        Byte headerLength;              // Длина заголовка.
-        UInt16 messageLength;           // Длина сообщения.
-        
+        Byte[] _data;                    // Сообщение, содержащееся после заголовка.
+
+        Byte _headerLength;              // Длина заголовка.
+        UInt16 _messageLength;           // Длина сообщения.
+
+        #endregion // Fields
+
+        #region Constructors
+
         PacketIP() { }
 
         /// <summary>
@@ -37,29 +43,32 @@ namespace NetworkMonitor.Models.Packets
             using (MemoryStream memoryStream = new MemoryStream(Buffer, 0, Received))
             using (BinaryReader binaryReader = new BinaryReader(memoryStream))
             {
-                versionAndHeaderLength = binaryReader.ReadByte();
-                serviceType = binaryReader.ReadByte();
-                totalLen = (UInt16)IPAddress.NetworkToHostOrder(binaryReader.ReadInt16());
-                id = (UInt16)IPAddress.HostToNetworkOrder(binaryReader.ReadInt16());
-                flagsAndOffset = (UInt16)IPAddress.HostToNetworkOrder(binaryReader.ReadInt16());
-                ttl = binaryReader.ReadByte();
-                protocol = binaryReader.ReadByte();
-                checksum = IPAddress.HostToNetworkOrder(binaryReader.ReadInt16());
-                sourceIP = (UInt32)binaryReader.ReadInt32();
-                destIP = (UInt32)binaryReader.ReadInt32();
+                _versionAndHeaderLength = binaryReader.ReadByte();
+                _serviceType = binaryReader.ReadByte();
+                _totalLen = (UInt16)IPAddress.NetworkToHostOrder(binaryReader.ReadInt16());
+                _id = (UInt16)IPAddress.HostToNetworkOrder(binaryReader.ReadInt16());
+                _flagsAndOffset = (UInt16)IPAddress.HostToNetworkOrder(binaryReader.ReadInt16());
+                _ttl = binaryReader.ReadByte();
+                _protocol = binaryReader.ReadByte();
+                _checksum = IPAddress.HostToNetworkOrder(binaryReader.ReadInt16());
+                _sourceIP = (UInt32)binaryReader.ReadInt32();
+                _destIP = (UInt32)binaryReader.ReadInt32();
 
-                headerLength = versionAndHeaderLength;
-                headerLength <<= 4;
-                headerLength >>= 4;
-                headerLength *= 4;  // Т.к. поле headerLength содержит в себе количество 32х-битных слов, домножаем на 4, чтобы получить количество байт.
+                _headerLength = _versionAndHeaderLength;
+                _headerLength <<= 4;
+                _headerLength >>= 4;
+                _headerLength *= 4;  // Т.к. поле headerLength содержит в себе количество 32х-битных слов, домножаем на 4, чтобы получить количество байт.
 
-                messageLength = (UInt16)(totalLen - headerLength);
+                _messageLength = (UInt16)(_totalLen - _headerLength);
 
-                data = new byte[messageLength];
-                Array.Copy(Buffer, headerLength, data, 0, data.Length);
+                _data = new byte[_messageLength];
+                Array.Copy(Buffer, _headerLength, _data, 0, _data.Length);
             }
         }
 
+        #endregion // Constructors
+
+        #region Properties
         /// <summary>
         /// Версия протокола.
         /// </summary>
@@ -67,7 +76,7 @@ namespace NetworkMonitor.Models.Packets
         {
             get
             {
-                Byte version = (Byte)(versionAndHeaderLength >> 4);
+                Byte version = (Byte)(_versionAndHeaderLength >> 4);
                 if (version == 4) return "IPv4";
                 else if (version == 6) return "IPv6";
                 else return "Unknown";
@@ -79,7 +88,7 @@ namespace NetworkMonitor.Models.Packets
         /// </summary>
         public Byte HeaderLength
         {
-            get { return headerLength; }
+            get { return _headerLength; }
         }
 
         /// <summary>
@@ -87,7 +96,7 @@ namespace NetworkMonitor.Models.Packets
         /// </summary>
         public String ServiceType
         {
-            get { return String.Format("0x{0:x2} ({0})", serviceType); }
+            get { return String.Format("0x{0:x2} ({0})", _serviceType); }
         }
 
         /// <summary>
@@ -95,7 +104,7 @@ namespace NetworkMonitor.Models.Packets
         /// </summary>
         public UInt16 TotalLen
         {
-            get { return totalLen; }
+            get { return _totalLen; }
         }
 
         /// <summary>
@@ -103,7 +112,7 @@ namespace NetworkMonitor.Models.Packets
         /// </summary>
         public UInt16 Id
         {
-            get { return id; }
+            get { return _id; }
         }
 
         /// <summary>
@@ -113,7 +122,7 @@ namespace NetworkMonitor.Models.Packets
         {
             get
             {
-                UInt16 flags = (UInt16)(flagsAndOffset >> 13);
+                UInt16 flags = (UInt16)(_flagsAndOffset >> 13);
                 if (flags == 2) return "Not fragmented";
                 else if (flags == 1) return "Fragmented";
                 return flags.ToString();
@@ -127,7 +136,7 @@ namespace NetworkMonitor.Models.Packets
         {
             get
             {
-                UInt16 offset = (UInt16)(flagsAndOffset << 3);
+                UInt16 offset = (UInt16)(_flagsAndOffset << 3);
                 offset >>= 3;
                 return offset;
             }
@@ -138,7 +147,7 @@ namespace NetworkMonitor.Models.Packets
         /// </summary>
         public Byte TTL
         {
-            get { return ttl; }
+            get { return _ttl; }
         }
 
         public String Protocol
@@ -151,7 +160,7 @@ namespace NetworkMonitor.Models.Packets
             */
             get
             {
-                switch (protocol)
+                switch (_protocol)
                 {
                     case 6: return "TCP";
                     case 17: return "UDP";
@@ -167,7 +176,7 @@ namespace NetworkMonitor.Models.Packets
         /// </summary>
         public String Checksum
         {
-            get { return "0x" + checksum.ToString("x"); }
+            get { return "0x" + _checksum.ToString("x"); }
         }
 
         /// <summary>
@@ -175,7 +184,7 @@ namespace NetworkMonitor.Models.Packets
         /// </summary>
         public IPAddress SourceIP
         {
-            get { return new IPAddress(sourceIP); }
+            get { return new IPAddress(_sourceIP); }
         }
 
         /// <summary>
@@ -183,7 +192,7 @@ namespace NetworkMonitor.Models.Packets
         /// </summary>
         public IPAddress DestinationIP
         {
-            get { return new IPAddress(destIP); }
+            get { return new IPAddress(_destIP); }
         }
 
         /// <summary>
@@ -191,7 +200,7 @@ namespace NetworkMonitor.Models.Packets
         /// </summary>
         public UInt16 MessageLength
         {
-            get { return messageLength; }
+            get { return _messageLength; }
         }
 
         /// <summary>
@@ -199,7 +208,9 @@ namespace NetworkMonitor.Models.Packets
         /// </summary>
         public byte[] Data
         {
-            get { return data; }
+            get { return _data; }
         }
+
+        #endregion // Properties
     }
 }

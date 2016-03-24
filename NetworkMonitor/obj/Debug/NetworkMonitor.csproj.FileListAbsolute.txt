@@ -1,7 +1,6 @@
 c:\users\ogore\documents\visual studio 2015\Projects\NetworkMonitor\NetworkMonitor\bin\Debug\NetworkMonitor.exe.config
 c:\users\ogore\documents\visual studio 2015\Projects\NetworkMonitor\NetworkMonitor\bin\Debug\NetworkMonitor.exe
 c:\users\ogore\documents\visual studio 2015\Projects\NetworkMonitor\NetworkMonitor\bin\Debug\NetworkMonitor.pdb
-c:\users\ogore\documents\visual studio 2015\Projects\NetworkMonitor\NetworkMonitor\obj\Debug\NetworkMonitor.csprojResolveAssemblyReference.cache
 c:\users\ogore\documents\visual studio 2015\Projects\NetworkMonitor\NetworkMonitor\obj\Debug\App.g.cs
 c:\users\ogore\documents\visual studio 2015\Projects\NetworkMonitor\NetworkMonitor\obj\Debug\NetworkMonitor_MarkupCompile.cache
 c:\users\ogore\documents\visual studio 2015\Projects\NetworkMonitor\NetworkMonitor\obj\Debug\NetworkMonitor_MarkupCompile.lref
@@ -16,3 +15,4 @@ D:\Ogore\OneDrive\Documents\Visual Studio 2015\Projects\NetworkMonitor\NetworkMo
 C:\Users\Ogore\documents\visual studio 2015\Projects\NetworkMonitor\NetworkMonitor\obj\Debug\GeneratedInternalTypeHelper.g.cs
 C:\Users\Ogore\Documents\Visual Studio 2015\Projects\NetworkMonitor\NetworkMonitor\obj\Debug\MainView.g.cs
 C:\Users\Ogore\Documents\Visual Studio 2015\Projects\NetworkMonitor\NetworkMonitor\obj\Debug\MainView.baml
+C:\Users\Ogore\documents\visual studio 2015\Projects\NetworkMonitor\NetworkMonitor\obj\Debug\NetworkMonitor.csprojResolveAssemblyReference.cache

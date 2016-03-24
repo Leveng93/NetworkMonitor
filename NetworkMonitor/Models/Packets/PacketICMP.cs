@@ -6,12 +6,18 @@ namespace NetworkMonitor.Models.Packets
 {
     class PacketICMP
     {
-        Byte type;          // Тип сообщения ICMP.
-        Byte code;          // Код ошибки.
-        Int16 checksum;     // Контрольная сумма.
+        #region Fields
 
-        Byte[] data;        // Сообщение, содержащееся после заголовка. Зависит от полей type и code.
-        
+        Byte _type;          // Тип сообщения ICMP.
+        Byte _code;          // Код ошибки.
+        Int16 _checksum;     // Контрольная сумма.
+
+        Byte[] _data;        // Сообщение, содержащееся после заголовка. Зависит от полей type и code.
+
+        #endregion  // Fields
+
+        #region Constructors
+
         /// <summary>
         /// Инициализирует новый экземпляр класса PacketICMP.
         /// </summary>
@@ -28,33 +34,39 @@ namespace NetworkMonitor.Models.Packets
             using (MemoryStream memoryStream = new MemoryStream(Buffer, 0, Received))
             using (BinaryReader binaryReader = new BinaryReader(memoryStream))
             {
-                type = binaryReader.ReadByte();
-                code = binaryReader.ReadByte();
-                checksum = IPAddress.NetworkToHostOrder(binaryReader.ReadInt16());
+                _type = binaryReader.ReadByte();
+                _code = binaryReader.ReadByte();
+                _checksum = IPAddress.NetworkToHostOrder(binaryReader.ReadInt16());
 
-                data = new byte[Received - 4];
-                Array.Copy(Buffer, 4, data, 0, data.Length);
+                _data = new byte[Received - 4];
+                Array.Copy(Buffer, 4, _data, 0, _data.Length);
             }
         }
 
+        #endregion // Constructors
+
+        #region Properties
+
         public byte Type
         {
-            get { return type; }
+            get { return _type; }
         }
 
         public byte Code
         {
-            get { return code; }
+            get { return _code; }
         }
 
         public short Checksum
         {
-            get { return checksum; }
+            get { return _checksum; }
         }
 
         public byte[] Data
         {
-            get { return data; }
+            get { return _data; }
         }
+
+        #endregion // Properties
     }
 }

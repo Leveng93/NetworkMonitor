@@ -13,10 +13,10 @@ namespace NetworkMonitor.ViewModels
         #region FieldsAndProps
 
         INetworkPacketsReceiver _packetsReceiver;
-        public ObservableCollection<PacketIP> Packets { get; set; }
+        public ObservableCollection<PacketInfo> Packets { get; private set; }
 
-        int _packetsReceivedCount;
-        public int PacketsReceivedCount
+        ulong _packetsReceivedCount;
+        public ulong PacketsReceivedCount
         {
             get { return _packetsReceivedCount; }
             set
@@ -24,7 +24,7 @@ namespace NetworkMonitor.ViewModels
                 _packetsReceivedCount = value;
                 OnPropertyChanged("PacketsReceivedCount");
             }
-        }
+        }        
 
         #endregion // FieldsAndProps
 
@@ -71,7 +71,7 @@ namespace NetworkMonitor.ViewModels
         public MainViewModel()
         {
             _packetsReceiver = NetworkPacketsReceiver.Instance;
-            Packets = new ObservableCollection<PacketIP>();
+            Packets = new ObservableCollection<PacketInfo>();
             _packetsReceiver.PacketReceivedEvent += OnPacketReceived;
         }
 
@@ -89,17 +89,18 @@ namespace NetworkMonitor.ViewModels
             {
                 await _packetsReceiver.StartAsync(ipAddr, ipEndPoint);
             }
+            catch (ObjectDisposedException) { } // Возникает при принудительном закрытии сокета методом Close().
             catch (Exception ex) { MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK); }
         }
 
         public void StopNetworkMonitor ()
         {
-            _packetsReceiver.Stop();
+            _packetsReceiver.Stop(StopType.Immediately);
         }
 
         void OnPacketReceived(PacketIP packet)
         {
-            Packets.Add(packet);
+            Packets.Add(new PacketInfo(packet, PacketsReceivedCount, DateTime.Now));
             PacketsReceivedCount++;
         }
 
