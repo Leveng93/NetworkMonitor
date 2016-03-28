@@ -32,7 +32,11 @@ namespace NetworkMonitor.ViewModels
             get { return _selectedValue; }
             set
             {
-                _selectedValue = value;
+                if (value != null && value != _selectedValue)
+                {
+                    _selectedValue = value;
+                    ShowPackageDetails(_selectedValue);
+                }                   
                 OnPropertyChanged("SelectedValue");
             }
         }
@@ -89,9 +93,9 @@ namespace NetworkMonitor.ViewModels
             PacketsReceivedCount++;
         }
 
-        void ShowPackageDetails ()
+        void ShowPackageDetails (PacketInfo packet)
         {
-            MessageBox.Show("BindingCheck");
+            MessageBox.Show(packet.PacketNumber.ToString());
         }
 
         #endregion // Methods
