@@ -2,17 +2,16 @@
 
 namespace NetworkMonitor.ViewModels
 {
+    /// <summary>
+    /// Базовый класс модели-представления.
+    /// </summary>
     class ViewModelBase : INotifyPropertyChanged
     {
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler PropertyChanged = delegate { };    // Событие изменения свойства.
         protected virtual void OnPropertyChanged(string propertyName)
         {
-            PropertyChangedEventHandler handler = this.PropertyChanged;
-            if (handler != null)
-            {
-                var e = new PropertyChangedEventArgs(propertyName);
-                PropertyChanged(this, e);
-            }
+            var e = new PropertyChangedEventArgs(propertyName);
+            PropertyChanged(this, e);   // Уведомление об изменении свойства.
         }
     }
 }

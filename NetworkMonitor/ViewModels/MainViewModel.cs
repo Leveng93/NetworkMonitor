@@ -12,7 +12,7 @@ namespace NetworkMonitor.ViewModels
     {
         #region FieldsAndProps
 
-        INetworkPacketsReceiver _packetsReceiver;
+        public INetworkPacketsReceiver PacketsReceiver { get; private set; }
         public ObservableCollection<PacketInfo> Packets { get; private set; }
 
         ulong _packetsReceivedCount;
@@ -24,45 +24,26 @@ namespace NetworkMonitor.ViewModels
                 _packetsReceivedCount = value;
                 OnPropertyChanged("PacketsReceivedCount");
             }
-        }        
+        }
+
+        PacketInfo _selectedValue;
+        public PacketInfo SelectedValue
+        {
+            get { return _selectedValue; }
+            set
+            {
+                _selectedValue = value;
+                OnPropertyChanged("SelectedValue");
+            }
+        }
 
         #endregion // FieldsAndProps
 
         #region Commands
 
-        RelayCommand _monitorStart;
-        public ICommand MonitorStart
-        {
-            get
-            {
-                if (_monitorStart == null)
-                    _monitorStart = new RelayCommand(arg => StartNetworkMonitor());
-                
-                return _monitorStart;
-            }
-        }
-
-        RelayCommand _monitorStop;
-        public ICommand MonitorStop
-        {
-            get
-            {
-                if (_monitorStop == null)
-                    _monitorStop = new RelayCommand(arg => StopNetworkMonitor());
-                return _monitorStop;
-            }
-        }
-
-        RelayCommand _clearPacketCollection;
-        public ICommand ClearPacketCollection
-        {
-            get
-            {
-                if (_clearPacketCollection == null)
-                    _clearPacketCollection = new RelayCommand(arg => Packets.Clear());
-                return _clearPacketCollection;
-            }
-        }
+        public ICommand MonitorStart { get; private set; }
+        public ICommand MonitorStop { get; private set; }
+        public ICommand ClearPacketCollection { get; private set; }
 
         #endregion // Commands
 
@@ -70,16 +51,20 @@ namespace NetworkMonitor.ViewModels
 
         public MainViewModel()
         {
-            _packetsReceiver = NetworkPacketsReceiver.Instance;
+            PacketsReceiver = NetworkPacketsReceiver.Instance;
+            PacketsReceiver.PacketReceived += OnPacketReceived;
             Packets = new ObservableCollection<PacketInfo>();
-            _packetsReceiver.PacketReceivedEvent += OnPacketReceived;
+
+            MonitorStart = new RelayCommand(arg => StartNetworkMonitor());
+            MonitorStop = new RelayCommand(arg => StopNetworkMonitor());
+            ClearPacketCollection = new RelayCommand(arg => Packets.Clear());
         }
 
         #endregion // Constructors
 
         #region Methods
 
-        public async void StartNetworkMonitor ()
+        async void StartNetworkMonitor ()
         {
             IPHostEntry ipHost = await Dns.GetHostEntryAsync(Dns.GetHostName());
             IPAddress ipAddr = ipHost.AddressList[4];   // Дать пользователю выбрать IP в GUI;
@@ -87,21 +72,26 @@ namespace NetworkMonitor.ViewModels
 
             try
             {
-                await _packetsReceiver.StartAsync(ipAddr, ipEndPoint);
+                await PacketsReceiver.StartAsync(ipAddr, ipEndPoint);
             }
             catch (ObjectDisposedException) { } // Возникает при принудительном закрытии сокета методом Close().
             catch (Exception ex) { MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK); }
         }
 
-        public void StopNetworkMonitor ()
+        void StopNetworkMonitor ()
         {
-            _packetsReceiver.Stop(StopType.Immediately);
+            PacketsReceiver.Stop(StopType.Immediately);
         }
 
         void OnPacketReceived(PacketIP packet)
         {
             Packets.Add(new PacketInfo(packet, PacketsReceivedCount, DateTime.Now));
             PacketsReceivedCount++;
+        }
+
+        void ShowPackageDetails ()
+        {
+            MessageBox.Show("BindingCheck");
         }
 
         #endregion // Methods

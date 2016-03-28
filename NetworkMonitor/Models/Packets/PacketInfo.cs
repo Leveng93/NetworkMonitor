@@ -6,9 +6,9 @@ namespace NetworkMonitor.Models.Packets
     {
         #region Properties
 
-        public PacketIP _packetIp { get; private set; }
-        public ulong _packetNumber { get; private set; }
-        public DateTime _receiveTime { get; private set; }
+        public PacketIP PacketIp { get; private set; }
+        public ulong PacketNumber { get; private set; }
+        public DateTime ReceiveTime { get; private set; }
 
         #endregion // Properties
 
@@ -18,9 +18,9 @@ namespace NetworkMonitor.Models.Packets
 
         public PacketInfo(PacketIP packetIp, ulong packetNumber = default(ulong), DateTime receiveTime = default(DateTime))
         {
-            _packetIp = packetIp;
-            _packetNumber = packetNumber;
-            _receiveTime = receiveTime;
+            PacketIp = packetIp;
+            PacketNumber = packetNumber;
+            ReceiveTime = receiveTime;
         }
 
         #endregion // Constructors

@@ -23,7 +23,7 @@ namespace NetworkMonitor.Models
     {
         bool Started { get; }   // Состояние.
 
-        event Action<PacketIP> PacketReceivedEvent; // Событие, запускаемое при получении нового пакета.
+        event Action<PacketIP> PacketReceived; // Событие, запускаемое при получении нового пакета.
 
         void Start(IPAddress ipAddr, IPEndPoint ipEndPoint);        // Запуск мониторинга в синхронном режиме.
         Task StartAsync(IPAddress ipAddr, IPEndPoint ipEndPoint);   // Запуск мониторинга в асинхроном режиме.

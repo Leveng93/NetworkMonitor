@@ -4,12 +4,16 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:NetworkMonitor"
-        xmlns:viewModel="clr-namespace:NetworkMonitor.ViewModels"
+        xmlns:viewModels="clr-namespace:NetworkMonitor.ViewModels"
+        xmlns:converters="clr-namespace:NetworkMonitor.Converters"
         mc:Ignorable="d"
-        Title="Network monitor" Height="350" Width="525">
+        Title="Network monitor" Height="600" Width="800" WindowStartupLocation="CenterScreen">
     <Window.DataContext>
-        <viewModel:MainViewModel/>
+        <viewModels:MainViewModel/>
     </Window.DataContext>
+    <Window.Resources>
+        <converters:MonitorStatusConverter x:Key="StatusConverter" />
+    </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -22,22 +26,21 @@
 
         <DockPanel Grid.Row="0">
             <StackPanel Orientation="Horizontal">
-                <Button Command="{Binding MonitorStart}" >Start</Button>
-                <Button Command="{Binding MonitorStop}">Stop</Button>
-                <Button Command="{Binding ClearPacketCollection}">Clear</Button>
+                <Button Margin="3" Command="{Binding MonitorStart}" >Start</Button>
+                <Button Margin="3" Command="{Binding MonitorStop}">Stop</Button>
+                <Button Margin="3" Command="{Binding ClearPacketCollection}">Clear</Button>
             </StackPanel>
         </DockPanel>
 
-        <ListView Grid.Row="1" x:Name="lstw" Margin="3" ItemsSource="{Binding Packets, Mode=OneWay}">
+        <ListView Grid.Row="1" Margin="3" SelectedValue="{Binding Path=SelectedValue, Mode=OneWayToSource}" ItemsSource="{Binding Packets, Mode=OneWay}" IsSynchronizedWithCurrentItem="True">
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Header="№" Width="auto" DisplayMemberBinding="{Binding _packetNumber}"/>
-                    <GridViewColumn Header="Time" Width="auto" DisplayMemberBinding="{Binding _receiveTime.Now, Mode=OneWay, StringFormat=HH:mm:ss}"/>
-                    <GridViewColumn Header="Source" Width="auto" DisplayMemberBinding="{Binding _packetIp.SourceIP, Mode=OneWay}"/>
-                    <GridViewColumn Header="Destination" Width="auto" DisplayMemberBinding="{Binding _packetIp.DestinationIP, Mode=OneWay}"/>
-                    <GridViewColumn Header="Protocol" Width="auto" DisplayMemberBinding="{Binding _packetIp.Protocol, Mode=OneWay}"/>
-                    <GridViewColumn Header="Length" Width="auto" DisplayMemberBinding="{Binding _packetIp.TotalLen, Mode=OneWay}"/>
-                    <GridViewColumn Header="Info" Width="auto"/>
+                    <GridViewColumn Header="№" Width="auto" DisplayMemberBinding="{Binding PacketNumber}"/>
+                    <GridViewColumn Header="Time" Width="auto" DisplayMemberBinding="{Binding ReceiveTime.Now, Mode=OneWay, StringFormat=HH:mm:ss}"/>
+                    <GridViewColumn Header="Source" Width="auto" DisplayMemberBinding="{Binding PacketIp.SourceIP, Mode=OneWay}"/>
+                    <GridViewColumn Header="Destination" Width="auto" DisplayMemberBinding="{Binding PacketIp.DestinationIP, Mode=OneWay}"/>
+                    <GridViewColumn Header="Protocol" Width="auto" DisplayMemberBinding="{Binding PacketIp.Protocol, Mode=OneWay}"/>
+                    <GridViewColumn Header="Length" Width="auto" DisplayMemberBinding="{Binding PacketIp.TotalLen, Mode=OneWay}"/>
                 </GridView>
             </ListView.View>
         </ListView>
@@ -53,7 +56,7 @@
 
         <DockPanel Grid.Row="4">
             <StackPanel Orientation="Horizontal">
-                <TextBlock HorizontalAlignment="Right" Text="{Binding}"></TextBlock>
+                <TextBlock Padding="5" HorizontalAlignment="Left" Text="{Binding PacketsReceiver.Started, Mode=OneWay, Converter={StaticResource StatusConverter}}"></TextBlock>                
             </StackPanel>
         </DockPanel>
 

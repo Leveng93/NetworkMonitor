@@ -1,4 +1,5 @@
 ﻿using NetworkMonitor.Models.Packets;
+using System.ComponentModel;
 using System;
 using System.Net;
 using System.Net.Sockets;
@@ -9,25 +10,48 @@ namespace NetworkMonitor.Models
     /// <summary>
     /// Класс, предоставляющий данные о мониторинге сети. Синглтон.
     /// </summary>
-    class NetworkPacketsReceiver : INetworkPacketsReceiver
+    class NetworkPacketsReceiver : INetworkPacketsReceiver, INotifyPropertyChanged
     {
-        public event Action<PacketIP> PacketReceivedEvent = delegate { };
+        public event Action<PacketIP> PacketReceived = delegate { };
+        public event PropertyChangedEventHandler PropertyChanged = delegate { };
 
         Socket _mainSocket;  // Основной сокет.
         byte[] _buffer;      // Буффер, в который считывается пакет.
+        bool _started;
 
         /// <summary>
-        /// Отображение состояния сетевого монитора.
+        /// Отображение состояние мониторинга.
         /// </summary>
-        public bool Started { get; private set; }
+        public bool Started {
+            get { return _started; }
+            private set
+            {
+                if (value != _started)
+                {
+                    _started = value;
+                    OnPropertyChanged("Started");
+                }
+            }
+        }
 
         private static readonly Lazy<NetworkPacketsReceiver> _instance = new Lazy<NetworkPacketsReceiver>(() => new NetworkPacketsReceiver());
+
         private NetworkPacketsReceiver() { }
 
         /// <summary>
         /// Предоставляет экземпляр NetworkDataMonitor.
         /// </summary>
         public static NetworkPacketsReceiver Instance { get { return _instance.Value; } }
+
+        /// <summary>
+        /// Событие изменения свойства.
+        /// </summary>
+        /// <param name="propertyName"></param>
+        protected virtual void OnPropertyChanged(string propertyName)
+        {
+            var e = new PropertyChangedEventArgs(propertyName);
+            PropertyChanged(this, e);
+        }
 
         /// <summary>
         /// Запуск мониторинга в асинхронном режиме.
@@ -54,7 +78,7 @@ namespace NetworkMonitor.Models
                     while (Started)
                     {
                         int received = await Task.Factory.FromAsync(_mainSocket.BeginReceive(_buffer, 0, _buffer.Length, SocketFlags.None, null, null), _mainSocket.EndReceive);    // Считываем пакет в буффер.
-                        PacketReceivedEvent(new PacketIP(_buffer, received));  // Создаем новый IP пакет, запускаем событие (рассылаем пакет подписчикам).
+                        PacketReceived(new PacketIP(_buffer, received));  // Создаем новый IP пакет, запускаем событие (рассылаем пакет подписчикам).
                         Array.Clear(_buffer, 0, received); // Очищаем буффер.
                     }
                 }
@@ -91,7 +115,7 @@ namespace NetworkMonitor.Models
                     while (Started)
                     {
                         int received = _mainSocket.Receive(_buffer, 0, _buffer.Length, SocketFlags.None);    // Считываем пакет в буффер.
-                        PacketReceivedEvent(new PacketIP(_buffer, received));  // Создаем новый IP пакет, запускаем событие (рассылаем пакет подписчикам).
+                        PacketReceived(new PacketIP(_buffer, received));  // Создаем новый IP пакет, запускаем событие (рассылаем пакет подписчикам).
                         Array.Clear(_buffer, 0, received); // Очищаем буффер.
                     }
                 }
