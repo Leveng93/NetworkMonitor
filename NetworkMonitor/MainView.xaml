@@ -52,11 +52,12 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
             <GridSplitter Grid.Column="1" Width="3" HorizontalAlignment="Stretch" />
+            <TreeView x:Name="treeView"/>
         </Grid>
 
         <DockPanel Grid.Row="4">
             <StackPanel Orientation="Horizontal">
-                <TextBlock Padding="5" HorizontalAlignment="Left" Text="{Binding PacketsReceiver.Started, Mode=OneWay, Converter={StaticResource StatusConverter}}"></TextBlock>                
+                <TextBlock Padding="5" HorizontalAlignment="Left" Text="{Binding PacketsReceiver.Started, Mode=OneWay, Converter={StaticResource StatusConverter}}"></TextBlock>
             </StackPanel>
         </DockPanel>
 
