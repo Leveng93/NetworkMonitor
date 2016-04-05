@@ -57,6 +57,7 @@
     </ApplicationDefinition>
     <Compile Include="Converters\MonitorStatusConverter.cs" />
     <Compile Include="Models\INetworkPacketsReceiver.cs" />
+    <Compile Include="Models\Packets\IGroupedData.cs" />
     <Compile Include="Models\Packets\PacketInfo.cs" />
     <Compile Include="RelayCommand.cs" />
     <Compile Include="App.xaml.cs">

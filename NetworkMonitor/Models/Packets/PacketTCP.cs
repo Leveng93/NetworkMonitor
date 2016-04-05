@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Net;
+using System.Collections.Generic;
 
 namespace NetworkMonitor.Models.Packets
 {
@@ -21,8 +22,33 @@ namespace NetworkMonitor.Models.Packets
     /// <summary>
     /// TCP пакет, содержащий в себе заголовок и данные.
     /// </summary>
-    class PacketTCP
+    class PacketTCP : IGroupedData<string>
     {
+        List<string> _groupedData;
+        public IEnumerable<string> GroupedData
+        {
+            get
+            {
+                if (_groupedData != null) return _groupedData.AsReadOnly();
+
+                _groupedData = new List<string>();
+
+                _groupedData.Add("Source port: " + SourcePort);
+                _groupedData.Add("Destination port: " + DestinationPort);
+                _groupedData.Add("Sequence number: " + SequenceNumber);
+                _groupedData.Add("Acknowledgment number: " + AcknowledgmentNumber);
+                _groupedData.Add("Data offset: " + DataOffset);
+                _groupedData.Add("Flags: " + Flags);
+                _groupedData.Add("Window: " + Window);
+                _groupedData.Add("Check sum: " + Checksum);
+                _groupedData.Add("Urgent pointer: " + UrgentPointer);
+                _groupedData.Add("Header length: " + HeaderLength);
+                _groupedData.Add("Message length: " + MessageLength);
+
+                return _groupedData.AsReadOnly();
+            }
+        }
+
         #region Fields
 
         UInt16 sourcePort;              // Порт источника. 2 байта.
@@ -193,6 +219,8 @@ namespace NetworkMonitor.Models.Packets
             get { return data; }
         }
 
+        #endregion
+
         /// <summary>
         /// Метод, показывающий, содержится ли в данном пакете переданный битовый флаг.
         /// </summary>
@@ -202,7 +230,5 @@ namespace NetworkMonitor.Models.Packets
         {
             return flags.HasFlag(flag);
         }
-
-        #endregion
     }
 }

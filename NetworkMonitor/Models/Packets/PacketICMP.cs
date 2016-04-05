@@ -1,11 +1,29 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net;
 
 namespace NetworkMonitor.Models.Packets
 {
-    class PacketICMP
+    class PacketICMP : IGroupedData<string>
     {
+        List<string> _groupedData;
+        public IEnumerable<string> GroupedData
+        {
+            get
+            {
+                if (_groupedData != null) return _groupedData.AsReadOnly();
+
+                _groupedData = new List<string>();
+
+                _groupedData.Add("Message type: " + Type);
+                _groupedData.Add("Error code: " + Code);
+                _groupedData.Add("Check sum: " + Checksum);
+
+                return _groupedData.AsReadOnly();
+            }
+        }
+
         #region Fields
 
         Byte _type;          // Тип сообщения ICMP.
@@ -57,9 +75,9 @@ namespace NetworkMonitor.Models.Packets
             get { return _code; }
         }
 
-        public short Checksum
+        public string Checksum
         {
-            get { return _checksum; }
+            get { return "0x" + _checksum.ToString("x"); }
         }
 
         public byte[] Data

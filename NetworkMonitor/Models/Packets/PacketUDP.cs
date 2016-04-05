@@ -1,14 +1,33 @@
 ﻿using System;
 using System.IO;
 using System.Net;
+using System.Collections.Generic;
 
 namespace NetworkMonitor.Models.Packets
 {
     /// <summary>
     /// UDP пакет, содержащий в себе заголовок и данные.
     /// </summary>
-    class PacketUDP
+    class PacketUDP : IGroupedData<string>
     {
+        List<string> _groupedData;
+        public IEnumerable<string> GroupedData
+        {
+            get
+            {
+                if (_groupedData != null) return _groupedData.AsReadOnly();
+
+                _groupedData = new List<string>();
+
+                _groupedData.Add("Source port: " + SourcePort);
+                _groupedData.Add("Destination port: " + DestinationPort);
+                _groupedData.Add("Total length: " + TotalLength);
+                _groupedData.Add("Check sum: " + Checksum);
+
+                return _groupedData.AsReadOnly();
+            }
+        }
+
         #region Fields
 
         UInt16 sourcePort;              // Порт источника. 2 байта.

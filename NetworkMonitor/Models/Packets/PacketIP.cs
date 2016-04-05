@@ -1,14 +1,42 @@
 ﻿using System;
 using System.Net;
 using System.IO;
+using System.Collections.Generic;
 
 namespace NetworkMonitor.Models.Packets
 {
     /// <summary>
     /// IP пакет, содержащий в себе заголовок и данные.
     /// </summary>
-    class PacketIP
+    class PacketIP : IGroupedData<string>
     {
+        List<string> _groupedData;
+        public IEnumerable<string> GroupedData
+        {
+            get
+            {
+                if (_groupedData != null) return _groupedData.AsReadOnly();
+
+                _groupedData = new List<string>();
+
+                _groupedData.Add("Version: " + Version);
+                _groupedData.Add("Header length: " + HeaderLength.ToString());
+                _groupedData.Add("Service type: " + ServiceType);
+                _groupedData.Add("Total length: " + TotalLen);
+                _groupedData.Add("ID: " + Id);
+                _groupedData.Add("Fragmentation flags: " + Flags);
+                _groupedData.Add("Fragmentation offset: " + Offset);
+                _groupedData.Add("TTL: " + TTL);
+                _groupedData.Add("Up level protocol: " + Protocol);
+                _groupedData.Add("Check sum: " + Checksum);
+                _groupedData.Add("Source IP: " + SourceIP);
+                _groupedData.Add("Destination IP: " + DestinationIP);
+                _groupedData.Add("Message length: " + MessageLength);
+
+                return _groupedData.AsReadOnly();
+            }
+        }
+
         #region Fields
 
         Byte _versionAndHeaderLength;    // Версия протокола IP (первые 4 бита) + длина заголовка (следующие 4 бита).

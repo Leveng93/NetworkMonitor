@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace NetworkMonitor.Models.Packets
 {
@@ -9,6 +10,9 @@ namespace NetworkMonitor.Models.Packets
         public PacketIP PacketIp { get; private set; }
         public ulong PacketNumber { get; private set; }
         public DateTime ReceiveTime { get; private set; }
+
+        public IGroupedData<string> PacketIPGroupedData { get; private set; }
+        public IGroupedData<string> UpLevelProtocolGroupedData { get; private set; }
 
         #endregion // Properties
 
@@ -21,6 +25,8 @@ namespace NetworkMonitor.Models.Packets
             PacketIp = packetIp;
             PacketNumber = packetNumber;
             ReceiveTime = receiveTime;
+
+            PacketIPGroupedData = PacketIp;
         }
 
         #endregion // Constructors
