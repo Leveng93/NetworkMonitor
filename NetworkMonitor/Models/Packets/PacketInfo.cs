@@ -11,7 +11,6 @@ namespace NetworkMonitor.Models.Packets
         public ulong PacketNumber { get; private set; }
         public DateTime ReceiveTime { get; private set; }
 
-        public IGroupedData<string> PacketIPGroupedData { get; private set; }
         public IGroupedData<string> UpLevelProtocolGroupedData { get; private set; }
 
         #endregion // Properties
@@ -25,8 +24,6 @@ namespace NetworkMonitor.Models.Packets
             PacketIp = packetIp;
             PacketNumber = packetNumber;
             ReceiveTime = receiveTime;
-
-            PacketIPGroupedData = PacketIp;
         }
 
         #endregion // Constructors
