@@ -22,31 +22,28 @@ namespace NetworkMonitor.Models.Packets
     /// <summary>
     /// TCP пакет, содержащий в себе заголовок и данные.
     /// </summary>
-    class PacketTCP : IGroupedData<string>
+    class PacketTCP : IGroupedData
     {
         List<string> _groupedData;
-        public IEnumerable<string> GroupedData
+        public IEnumerable<string> GetGroupedData()
         {
-            get
-            {
-                if (_groupedData != null) return _groupedData.AsReadOnly();
+            if (_groupedData != null) return _groupedData.AsReadOnly();
 
-                _groupedData = new List<string>();
+            _groupedData = new List<string>();
 
-                _groupedData.Add("Source port: " + SourcePort);
-                _groupedData.Add("Destination port: " + DestinationPort);
-                _groupedData.Add("Sequence number: " + SequenceNumber);
-                _groupedData.Add("Acknowledgment number: " + AcknowledgmentNumber);
-                _groupedData.Add("Data offset: " + DataOffset);
-                _groupedData.Add("Flags: " + Flags);
-                _groupedData.Add("Window: " + Window);
-                _groupedData.Add("Check sum: " + Checksum);
-                _groupedData.Add("Urgent pointer: " + UrgentPointer);
-                _groupedData.Add("Header length: " + HeaderLength);
-                _groupedData.Add("Message length: " + MessageLength);
+            _groupedData.Add("Source port: " + SourcePort);
+            _groupedData.Add("Destination port: " + DestinationPort);
+            _groupedData.Add("Sequence number: " + SequenceNumber);
+            _groupedData.Add("Acknowledgment number: " + AcknowledgmentNumber);
+            _groupedData.Add("Data offset: " + DataOffset);
+            _groupedData.Add("Flags: " + Flags);
+            _groupedData.Add("Window: " + Window);
+            _groupedData.Add("Check sum: " + Checksum);
+            _groupedData.Add("Urgent pointer: " + UrgentPointer);
+            _groupedData.Add("Header length: " + HeaderLength);
+            _groupedData.Add("Message length: " + MessageLength);
 
-                return _groupedData.AsReadOnly();
-            }
+            return _groupedData.AsReadOnly();
         }
 
         #region Fields

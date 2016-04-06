@@ -8,24 +8,22 @@ namespace NetworkMonitor.Models.Packets
     /// <summary>
     /// UDP пакет, содержащий в себе заголовок и данные.
     /// </summary>
-    class PacketUDP : IGroupedData<string>
+    class PacketUDP : IGroupedData
     {
         List<string> _groupedData;
-        public IEnumerable<string> GroupedData
+        public IEnumerable<string> GetGroupedData()
         {
-            get
-            {
-                if (_groupedData != null) return _groupedData.AsReadOnly();
 
-                _groupedData = new List<string>();
+            if (_groupedData != null) return _groupedData.AsReadOnly();
 
-                _groupedData.Add("Source port: " + SourcePort);
-                _groupedData.Add("Destination port: " + DestinationPort);
-                _groupedData.Add("Total length: " + TotalLength);
-                _groupedData.Add("Check sum: " + Checksum);
+            _groupedData = new List<string>();
 
-                return _groupedData.AsReadOnly();
-            }
+            _groupedData.Add("Source port: " + SourcePort);
+            _groupedData.Add("Destination port: " + DestinationPort);
+            _groupedData.Add("Total length: " + TotalLength);
+            _groupedData.Add("Check sum: " + Checksum);
+
+            return _groupedData.AsReadOnly();
         }
 
         #region Fields

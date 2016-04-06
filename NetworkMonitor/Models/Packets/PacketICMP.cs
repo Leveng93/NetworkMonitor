@@ -5,23 +5,20 @@ using System.Net;
 
 namespace NetworkMonitor.Models.Packets
 {
-    class PacketICMP : IGroupedData<string>
+    class PacketICMP : IGroupedData
     {
         List<string> _groupedData;
-        public IEnumerable<string> GroupedData
+        public IEnumerable<string> GetGroupedData()
         {
-            get
-            {
-                if (_groupedData != null) return _groupedData.AsReadOnly();
+            if (_groupedData != null) return _groupedData.AsReadOnly();
 
-                _groupedData = new List<string>();
+            _groupedData = new List<string>();
 
-                _groupedData.Add("Message type: " + Type);
-                _groupedData.Add("Error code: " + Code);
-                _groupedData.Add("Check sum: " + Checksum);
+            _groupedData.Add("Message type: " + Type);
+            _groupedData.Add("Error code: " + Code);
+            _groupedData.Add("Check sum: " + Checksum);
 
-                return _groupedData.AsReadOnly();
-            }
+            return _groupedData.AsReadOnly();
         }
 
         #region Fields
