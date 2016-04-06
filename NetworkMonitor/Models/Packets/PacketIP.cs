@@ -8,32 +8,8 @@ namespace NetworkMonitor.Models.Packets
     /// <summary>
     /// IP пакет, содержащий в себе заголовок и данные.
     /// </summary>
-    class PacketIP : IGroupedData
+    class PacketIP : IGroupedData<string>
     {
-        List<string> _groupedData;
-        public IEnumerable<string> GetGroupedData()
-        {
-            if (_groupedData != null) return _groupedData.AsReadOnly();
-
-            _groupedData = new List<string>();
-
-            _groupedData.Add("Version: " + Version);
-            _groupedData.Add("Header length: " + HeaderLength.ToString());
-            _groupedData.Add("Service type: " + ServiceType);
-            _groupedData.Add("Total length: " + TotalLen);
-            _groupedData.Add("ID: " + Id);
-            _groupedData.Add("Fragmentation flags: " + Flags);
-            _groupedData.Add("Fragmentation offset: " + Offset);
-            _groupedData.Add("TTL: " + TTL);
-            _groupedData.Add("Up level protocol: " + Protocol);
-            _groupedData.Add("Check sum: " + Checksum);
-            _groupedData.Add("Source IP: " + SourceIP);
-            _groupedData.Add("Destination IP: " + DestinationIP);
-            _groupedData.Add("Message length: " + MessageLength);
-
-            return _groupedData.AsReadOnly();
-        }
-
         #region Fields
 
         Byte _versionAndHeaderLength;    // Версия протокола IP (первые 4 бита) + длина заголовка (следующие 4 бита).
@@ -51,6 +27,8 @@ namespace NetworkMonitor.Models.Packets
 
         Byte _headerLength;              // Длина заголовка.
         UInt16 _messageLength;           // Длина сообщения.
+
+        List<string> _groupedData;
 
         #endregion // Fields
 
@@ -237,5 +215,28 @@ namespace NetworkMonitor.Models.Packets
         }
 
         #endregion // Properties
+
+        public IEnumerable<string> GetGroupedData()
+        {
+            if (_groupedData != null) return _groupedData.AsReadOnly();
+
+            _groupedData = new List<string>();
+
+            _groupedData.Add("Version: " + Version);
+            _groupedData.Add("Header length: " + HeaderLength.ToString());
+            _groupedData.Add("Service type: " + ServiceType);
+            _groupedData.Add("Total length: " + TotalLen);
+            _groupedData.Add("ID: " + Id);
+            _groupedData.Add("Fragmentation flags: " + Flags);
+            _groupedData.Add("Fragmentation offset: " + Offset);
+            _groupedData.Add("TTL: " + TTL);
+            _groupedData.Add("Up level protocol: " + Protocol);
+            _groupedData.Add("Check sum: " + Checksum);
+            _groupedData.Add("Source IP: " + SourceIP);
+            _groupedData.Add("Destination IP: " + DestinationIP);
+            _groupedData.Add("Message length: " + MessageLength);
+
+            return _groupedData.AsReadOnly();
+        }
     }
 }

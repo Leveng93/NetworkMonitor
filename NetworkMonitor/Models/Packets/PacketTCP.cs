@@ -22,30 +22,8 @@ namespace NetworkMonitor.Models.Packets
     /// <summary>
     /// TCP пакет, содержащий в себе заголовок и данные.
     /// </summary>
-    class PacketTCP : IGroupedData
+    class PacketTCP : IGroupedData<string>
     {
-        List<string> _groupedData;
-        public IEnumerable<string> GetGroupedData()
-        {
-            if (_groupedData != null) return _groupedData.AsReadOnly();
-
-            _groupedData = new List<string>();
-
-            _groupedData.Add("Source port: " + SourcePort);
-            _groupedData.Add("Destination port: " + DestinationPort);
-            _groupedData.Add("Sequence number: " + SequenceNumber);
-            _groupedData.Add("Acknowledgment number: " + AcknowledgmentNumber);
-            _groupedData.Add("Data offset: " + DataOffset);
-            _groupedData.Add("Flags: " + Flags);
-            _groupedData.Add("Window: " + Window);
-            _groupedData.Add("Check sum: " + Checksum);
-            _groupedData.Add("Urgent pointer: " + UrgentPointer);
-            _groupedData.Add("Header length: " + HeaderLength);
-            _groupedData.Add("Message length: " + MessageLength);
-
-            return _groupedData.AsReadOnly();
-        }
-
         #region Fields
 
         UInt16 sourcePort;              // Порт источника. 2 байта.
@@ -64,6 +42,7 @@ namespace NetworkMonitor.Models.Packets
         FlagsTCP flags;                 // Флаги TCP пакета.
 
         byte[] data;                    // Сообщение, содержащееся после заголовка.
+        List<string> _groupedData;
 
         #endregion // Fields
 
@@ -226,6 +205,27 @@ namespace NetworkMonitor.Models.Packets
         public bool HasFlag (FlagsTCP flag)
         {
             return flags.HasFlag(flag);
+        }
+
+        public IEnumerable<string> GetGroupedData()
+        {
+            if (_groupedData != null) return _groupedData.AsReadOnly();
+
+            _groupedData = new List<string>();
+
+            _groupedData.Add("Source port: " + SourcePort);
+            _groupedData.Add("Destination port: " + DestinationPort);
+            _groupedData.Add("Sequence number: " + SequenceNumber);
+            _groupedData.Add("Acknowledgment number: " + AcknowledgmentNumber);
+            _groupedData.Add("Data offset: " + DataOffset);
+            _groupedData.Add("Flags: " + Flags);
+            _groupedData.Add("Window: " + Window);
+            _groupedData.Add("Check sum: " + Checksum);
+            _groupedData.Add("Urgent pointer: " + UrgentPointer);
+            _groupedData.Add("Header length: " + HeaderLength);
+            _groupedData.Add("Message length: " + MessageLength);
+
+            return _groupedData.AsReadOnly();
         }
     }
 }

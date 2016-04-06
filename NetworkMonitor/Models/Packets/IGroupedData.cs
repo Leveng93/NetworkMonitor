@@ -2,8 +2,16 @@
 
 namespace NetworkMonitor.Models.Packets
 {
-    interface IGroupedData
+    /// <summary>
+    /// Данные, сгруппированные в IEnumerable<T>
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    interface IGroupedData<T>
     {
-        IEnumerable<string> GetGroupedData();
+        /// <summary>
+        /// Возвращает данные, сгруппированные в Enumerable<T>
+        /// </summary>
+        /// <returns></returns>
+        IEnumerable<T> GetGroupedData();
     }
 }

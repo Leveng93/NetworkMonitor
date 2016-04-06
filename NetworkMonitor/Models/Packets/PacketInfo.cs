@@ -1,8 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace NetworkMonitor.Models.Packets
 {
+    /// <summary>
+    /// Информация о принятом сетевом пакете.
+    /// </summary>
     class PacketInfo
     {
         #region Properties
@@ -11,7 +13,7 @@ namespace NetworkMonitor.Models.Packets
         public ulong PacketNumber { get; private set; }
         public DateTime ReceiveTime { get; private set; }
 
-        public IGroupedData UpLevelProtocolGroupedData { get; private set; }
+        public IGroupedData<string> UpLevelProtocolGroupedData { get; private set; } // Протокол верхнего уровня ISO/OSI
 
         #endregion // Properties
 
@@ -24,8 +26,26 @@ namespace NetworkMonitor.Models.Packets
             PacketIp = packetIp;
             PacketNumber = packetNumber;
             ReceiveTime = receiveTime;
+            UpLevelProtocolGroupedData = GetUpLevelProtocol(packetIp);
         }
 
         #endregion // Constructors
+
+        /// <summary>
+        /// Получает протокол верхнего уровня на основании свойства PacketIP.Protocol.
+        /// </summary>
+        /// <param name="packet"></param>
+        /// <returns></returns>
+        IGroupedData<string> GetUpLevelProtocol(PacketIP packet)
+        {
+            switch (packet.Protocol)
+            {
+                case "TCP": return new PacketTCP(packet);
+                case "UDP": return new PacketUDP(packet);
+                case "ICMP": return new PacketICMP(packet);
+                case "IGMP": break; // Реализовать
+            }
+            return null;
+        }
     }
 }

@@ -5,22 +5,8 @@ using System.Net;
 
 namespace NetworkMonitor.Models.Packets
 {
-    class PacketICMP : IGroupedData
+    class PacketICMP : IGroupedData<string>
     {
-        List<string> _groupedData;
-        public IEnumerable<string> GetGroupedData()
-        {
-            if (_groupedData != null) return _groupedData.AsReadOnly();
-
-            _groupedData = new List<string>();
-
-            _groupedData.Add("Message type: " + Type);
-            _groupedData.Add("Error code: " + Code);
-            _groupedData.Add("Check sum: " + Checksum);
-
-            return _groupedData.AsReadOnly();
-        }
-
         #region Fields
 
         Byte _type;          // Тип сообщения ICMP.
@@ -28,6 +14,7 @@ namespace NetworkMonitor.Models.Packets
         Int16 _checksum;     // Контрольная сумма.
 
         Byte[] _data;        // Сообщение, содержащееся после заголовка. Зависит от полей type и code.
+        List<string> _groupedData;
 
         #endregion  // Fields
 
@@ -83,5 +70,22 @@ namespace NetworkMonitor.Models.Packets
         }
 
         #endregion // Properties
+
+        /// <summary>
+        /// Data, grouped to string enumerable.
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<string> GetGroupedData()
+        {
+            if (_groupedData != null) return _groupedData.AsReadOnly();
+
+            _groupedData = new List<string>();
+
+            _groupedData.Add("Message type: " + Type);
+            _groupedData.Add("Error code: " + Code);
+            _groupedData.Add("Check sum: " + Checksum);
+
+            return _groupedData.AsReadOnly();
+        }
     }
 }
