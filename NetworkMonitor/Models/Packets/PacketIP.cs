@@ -49,11 +49,11 @@ namespace NetworkMonitor.Models.Packets
                 _versionAndHeaderLength = binaryReader.ReadByte();
                 _serviceType = binaryReader.ReadByte();
                 _totalLen = (UInt16)IPAddress.NetworkToHostOrder(binaryReader.ReadInt16());
-                _id = (UInt16)IPAddress.HostToNetworkOrder(binaryReader.ReadInt16());
-                _flagsAndOffset = (UInt16)IPAddress.HostToNetworkOrder(binaryReader.ReadInt16());
+                _id = (UInt16)IPAddress.NetworkToHostOrder(binaryReader.ReadInt16());
+                _flagsAndOffset = (UInt16)IPAddress.NetworkToHostOrder(binaryReader.ReadInt16());
                 _ttl = binaryReader.ReadByte();
                 _protocol = binaryReader.ReadByte();
-                _checksum = IPAddress.HostToNetworkOrder(binaryReader.ReadInt16());
+                _checksum = IPAddress.NetworkToHostOrder(binaryReader.ReadInt16());
                 _sourceIP = (UInt32)binaryReader.ReadInt32();
                 _destIP = (UInt32)binaryReader.ReadInt32();
 

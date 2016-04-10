@@ -79,7 +79,7 @@ namespace NetworkMonitor.ViewModels
                 await PacketsReceiver.StartAsync(ipAddr, ipEndPoint);
             }
             catch (ObjectDisposedException) { } // Возникает при принудительном закрытии сокета методом Close().
-            catch (Exception ex) { MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK); }
+ //           catch (Exception ex) { MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK); }
         }
 
         void StopNetworkMonitor ()

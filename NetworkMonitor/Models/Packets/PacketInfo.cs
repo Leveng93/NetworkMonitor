@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace NetworkMonitor.Models.Packets
 {
@@ -13,7 +15,7 @@ namespace NetworkMonitor.Models.Packets
         public ulong PacketNumber { get; private set; }
         public DateTime ReceiveTime { get; private set; }
 
-        public IGroupedData<string> UpLevelProtocolGroupedData { get; private set; } // Протокол верхнего уровня ISO/OSI
+        public string[] UpLevelProtocolGroupedData { get; private set; } // Протокол верхнего уровня ISO/OSI
 
         #endregion // Properties
 
@@ -26,7 +28,7 @@ namespace NetworkMonitor.Models.Packets
             PacketIp = packetIp;
             PacketNumber = packetNumber;
             ReceiveTime = receiveTime;
-            UpLevelProtocolGroupedData = GetUpLevelProtocol(packetIp);
+            UpLevelProtocolGroupedData = GetUpLevelProtocolData(packetIp).ToArray();
         }
 
         #endregion // Constructors
@@ -36,13 +38,13 @@ namespace NetworkMonitor.Models.Packets
         /// </summary>
         /// <param name="packet"></param>
         /// <returns></returns>
-        IGroupedData<string> GetUpLevelProtocol(PacketIP packet)
+        IEnumerable<string> GetUpLevelProtocolData(PacketIP packet)
         {
             switch (packet.Protocol)
             {
-                case "TCP": return new PacketTCP(packet);
-                case "UDP": return new PacketUDP(packet);
-                case "ICMP": return new PacketICMP(packet);
+                case "TCP": return new PacketTCP(packet).GetGroupedData();
+                case "UDP": return new PacketUDP(packet).GetGroupedData();
+                case "ICMP": return new PacketICMP(packet).GetGroupedData();
                 case "IGMP": break; // Реализовать
             }
             return null;
