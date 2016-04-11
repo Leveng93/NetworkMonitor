@@ -1,6 +1,0 @@
-C:\Users\Ogore\documents\visual studio 2015\Projects\NetworkMonitor\TestProj\bin\Debug\TestProj.exe.config
-C:\Users\Ogore\documents\visual studio 2015\Projects\NetworkMonitor\TestProj\bin\Debug\TestProj.exe
-C:\Users\Ogore\documents\visual studio 2015\Projects\NetworkMonitor\TestProj\bin\Debug\TestProj.pdb
-C:\Users\Ogore\documents\visual studio 2015\Projects\NetworkMonitor\TestProj\obj\Debug\TestProj.csprojResolveAssemblyReference.cache
-C:\Users\Ogore\documents\visual studio 2015\Projects\NetworkMonitor\TestProj\obj\Debug\TestProj.exe
-C:\Users\Ogore\documents\visual studio 2015\Projects\NetworkMonitor\TestProj\obj\Debug\TestProj.pdb
