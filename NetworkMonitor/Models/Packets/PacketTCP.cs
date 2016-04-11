@@ -72,7 +72,13 @@ namespace NetworkMonitor.Models.Packets
                 window = (UInt16)IPAddress.NetworkToHostOrder(binaryReader.ReadInt16());
                 checksum = IPAddress.NetworkToHostOrder(binaryReader.ReadInt16());
                 urgentPointer = (UInt16)IPAddress.NetworkToHostOrder(binaryReader.ReadInt16());
-                optionsAndPading = (UInt32)IPAddress.NetworkToHostOrder(binaryReader.ReadInt32());
+
+                if ( (headerLength - memoryStream.Position) >= 4 )
+                    optionsAndPading = (UInt32)IPAddress.NetworkToHostOrder(binaryReader.ReadInt32());
+                else if ( (headerLength - memoryStream.Position) >= 2)
+                    optionsAndPading = (UInt32)IPAddress.NetworkToHostOrder(binaryReader.ReadInt16());
+                else if ((headerLength - memoryStream.Position) == 1)
+                    optionsAndPading = (UInt32)IPAddress.NetworkToHostOrder(binaryReader.ReadByte());
 
                 headerLength = (Byte)(dataOffsetAndFlags >> 12); // Первые 4 байта в переменной - количество 32х-битных слов.
                 headerLength *= 4;  // Переводим в байты.
