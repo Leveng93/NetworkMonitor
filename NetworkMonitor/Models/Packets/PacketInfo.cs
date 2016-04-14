@@ -15,6 +15,7 @@ namespace NetworkMonitor.Models.Packets
         public ulong PacketNumber { get; private set; }
         public DateTime ReceiveTime { get; private set; }
 
+        public string[] PacketIPGroupedData { get; private set; }
         public string[] UpLevelProtocolGroupedData { get; private set; } // Протокол верхнего уровня ISO/OSI
 
         #endregion // Properties
@@ -28,9 +29,10 @@ namespace NetworkMonitor.Models.Packets
             PacketIp = packetIp;
             PacketNumber = packetNumber;
             ReceiveTime = receiveTime;
-            IEnumerable<string> upLevelProtocolEnum = GetUpLevelProtocolData(packetIp);
-            if (upLevelProtocolEnum != null)
-                UpLevelProtocolGroupedData = upLevelProtocolEnum.ToArray();
+            var upLevelProtocol = GetUpLevelProtocolData(packetIp);
+            if (upLevelProtocol != null)
+                UpLevelProtocolGroupedData = upLevelProtocol.ToArray();
+            PacketIPGroupedData = PacketIp.GetGroupedData().ToArray();
         }
 
         #endregion // Constructors

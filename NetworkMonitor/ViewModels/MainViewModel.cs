@@ -33,10 +33,7 @@ namespace NetworkMonitor.ViewModels
             set
             {
                 if (value != null && value != _selectedValue)
-                {
-                    _selectedValue = value;
-                    ShowPackageDetails(_selectedValue);
-                }                   
+                    _selectedValue = value;                                 
                 OnPropertyChanged("SelectedValue");
             }
         }
@@ -79,7 +76,7 @@ namespace NetworkMonitor.ViewModels
                 await PacketsReceiver.StartAsync(ipAddr, ipEndPoint);
             }
             catch (ObjectDisposedException) { } // Возникает при принудительном закрытии сокета методом Close().
- //           catch (Exception ex) { MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK); }
+            catch (Exception ex) { MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK); }
         }
 
         void StopNetworkMonitor ()
@@ -91,11 +88,6 @@ namespace NetworkMonitor.ViewModels
         {
             Packets.Add(new PacketInfo(packet, PacketsReceivedCount, DateTime.Now));
             PacketsReceivedCount++;
-        }
-
-        void ShowPackageDetails (PacketInfo packet)
-        {
-            MessageBox.Show(packet.PacketNumber.ToString());
         }
 
         #endregion // Methods
