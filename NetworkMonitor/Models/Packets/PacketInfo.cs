@@ -28,7 +28,9 @@ namespace NetworkMonitor.Models.Packets
             PacketIp = packetIp;
             PacketNumber = packetNumber;
             ReceiveTime = receiveTime;
-            UpLevelProtocolGroupedData = GetUpLevelProtocolData(packetIp).ToArray();
+            IEnumerable<string> upLevelProtocolEnum = GetUpLevelProtocolData(packetIp);
+            if (upLevelProtocolEnum != null)
+                UpLevelProtocolGroupedData = upLevelProtocolEnum.ToArray();
         }
 
         #endregion // Constructors

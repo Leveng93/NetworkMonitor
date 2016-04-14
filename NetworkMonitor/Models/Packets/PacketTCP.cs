@@ -73,17 +73,18 @@ namespace NetworkMonitor.Models.Packets
                 checksum = IPAddress.NetworkToHostOrder(binaryReader.ReadInt16());
                 urgentPointer = (UInt16)IPAddress.NetworkToHostOrder(binaryReader.ReadInt16());
 
-                if ( (headerLength - memoryStream.Position) >= 4 )
-                    optionsAndPading = (UInt32)IPAddress.NetworkToHostOrder(binaryReader.ReadInt32());
-                else if ( (headerLength - memoryStream.Position) >= 2)
-                    optionsAndPading = (UInt32)IPAddress.NetworkToHostOrder(binaryReader.ReadInt16());
-                else if ((headerLength - memoryStream.Position) == 1)
-                    optionsAndPading = (UInt32)IPAddress.NetworkToHostOrder(binaryReader.ReadByte());
-
                 headerLength = (Byte)(dataOffsetAndFlags >> 12); // Первые 4 байта в переменной - количество 32х-битных слов.
                 headerLength *= 4;  // Переводим в байты.
 
                 messageLength = (UInt16)(Received - headerLength);
+
+                UInt16 streamBytesLeft = (UInt16)(headerLength - memoryStream.Position);
+                optionsAndPading = streamBytesLeft;
+                while (streamBytesLeft != 0)
+                {
+                    optionsAndPading *= binaryReader.ReadByte();
+                    streamBytesLeft--;
+                }                   
 
                 // Записываем в отдельную переменную флаги TCP пакета.
                 UInt16 fl = (UInt16)(dataOffsetAndFlags & 0x3F);    // Маска 111111 в двоичной.
