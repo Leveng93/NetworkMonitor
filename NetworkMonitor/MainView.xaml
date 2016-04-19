@@ -27,9 +27,9 @@
 
         <DockPanel Grid.Row="0" Margin="10, 0, 10, 0">
             <StackPanel Orientation="Horizontal">
-                <Button x:Name="bntStart" IsEnabled="{Binding PacketsReceiver.Started, Mode=OneWay, Converter={StaticResource BoolInvertorConverter}}" Margin="0, 5, 0, 0" Command="{Binding MonitorStart}" >Start</Button>
-                <Button x:Name="btnStop" Margin="10, 5, 0, 0" Command="{Binding MonitorStop}">Stop</Button>
-                <Button Margin="10, 5, 0, 0" Command="{Binding ClearPacketCollection}">Clear</Button>
+                <Button x:Name="bntStart" Padding="3" IsEnabled="{Binding PacketsReceiver.Started, Mode=OneWay, Converter={StaticResource BoolInvertorConverter}}" Margin="0, 5, 0, 0" Command="{Binding MonitorStart}" >Start</Button>
+                <Button x:Name="btnStop" Padding="3" Margin="10, 5, 0, 0" Command="{Binding MonitorStop}">Stop</Button>
+                <Button Padding="3" Margin="10, 5, 0, 0" Command="{Binding ClearPacketCollection}">Clear</Button>
             </StackPanel>
             <ComboBox x:Name="ipComboBox" HorizontalAlignment="Right" Width="150" Margin="0, 5, 0, 0" IsEnabled="{Binding PacketsReceiver.Started, Mode=OneWay, Converter={StaticResource BoolInvertorConverter}}"  ItemsSource="{Binding IpAddresses}" SelectedValue="{Binding SelectedIP}" IsReadOnly="True" IsSynchronizedWithCurrentItem="True"/>
         </DockPanel>
@@ -39,8 +39,8 @@
                 <GridView>
                     <GridViewColumn Header="№" Width="100" DisplayMemberBinding="{Binding PacketNumber}"/>
                     <GridViewColumn Header="Time" Width="100" DisplayMemberBinding="{Binding ReceiveTime.Now, Mode=OneWay, StringFormat=HH:mm:ss}"/>
-                    <GridViewColumn Header="Source" Width="120" DisplayMemberBinding="{Binding PacketIp.SourceIP, Mode=OneWay}"/>
-                    <GridViewColumn Header="Destination" Width="120" DisplayMemberBinding="{Binding PacketIp.DestinationIP, Mode=OneWay}"/>
+                    <GridViewColumn Header="Source IP" Width="120" DisplayMemberBinding="{Binding PacketIp.SourceIP, Mode=OneWay}"/>
+                    <GridViewColumn Header="Destination IP" Width="120" DisplayMemberBinding="{Binding PacketIp.DestinationIP, Mode=OneWay}"/>
                     <GridViewColumn Header="Protocol" Width="100" DisplayMemberBinding="{Binding PacketIp.Protocol, Mode=OneWay}"/>
                     <GridViewColumn Header="Length" Width="100" DisplayMemberBinding="{Binding PacketIp.TotalLen, Mode=OneWay}"/>
                 </GridView>
