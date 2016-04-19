@@ -55,6 +55,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Converters\BoolConverter.cs" />
     <Compile Include="Converters\MonitorStatusConverter.cs" />
     <Compile Include="Models\INetworkPacketsReceiver.cs" />
     <Compile Include="Models\Packets\IGroupedData.cs" />

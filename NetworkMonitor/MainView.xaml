@@ -13,6 +13,7 @@
     </Window.DataContext>
     <Window.Resources>
         <converters:MonitorStatusConverter x:Key="StatusConverter" />
+        <converters:BoolInvertorConverter x:Key="BoolInvertorConverter" />
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -24,15 +25,16 @@
         </Grid.RowDefinitions>
         <GridSplitter Grid.Row="2" Height="3" HorizontalAlignment="Stretch" />
 
-        <DockPanel Grid.Row="0">
+        <DockPanel Grid.Row="0" Margin="10, 0, 10, 0">
             <StackPanel Orientation="Horizontal">
-                <Button Margin="10, 3, 0, 3" Command="{Binding MonitorStart}" >Start</Button>
-                <Button Margin="10, 3, 0, 3" Command="{Binding MonitorStop}">Stop</Button>
-                <Button Margin="10, 3, 0, 3" Command="{Binding ClearPacketCollection}">Clear</Button>
+                <Button x:Name="bntStart" IsEnabled="{Binding PacketsReceiver.Started, Mode=OneWay, Converter={StaticResource BoolInvertorConverter}}" Margin="0, 5, 0, 0" Command="{Binding MonitorStart}" >Start</Button>
+                <Button x:Name="btnStop" Margin="10, 5, 0, 0" Command="{Binding MonitorStop}">Stop</Button>
+                <Button Margin="10, 5, 0, 0" Command="{Binding ClearPacketCollection}">Clear</Button>
             </StackPanel>
+            <ComboBox x:Name="ipComboBox" HorizontalAlignment="Right" Width="150" Margin="0, 5, 0, 0" IsEnabled="{Binding PacketsReceiver.Started, Mode=OneWay, Converter={StaticResource BoolInvertorConverter}}"  ItemsSource="{Binding IpAddresses}" SelectedValue="{Binding SelectedIP}" IsReadOnly="True" IsSynchronizedWithCurrentItem="True"/>
         </DockPanel>
 
-        <ListView Grid.Row="1" Margin="10" SelectedValue="{Binding Path=SelectedValue, Mode=OneWayToSource}" ItemsSource="{Binding Packets, Mode=OneWay}" IsSynchronizedWithCurrentItem="True">
+        <ListView Grid.Row="1" Margin="10" SelectedValue="{Binding Path=SelectedPacket, Mode=OneWayToSource}" ItemsSource="{Binding Packets, Mode=OneWay}" IsSynchronizedWithCurrentItem="True">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="№" Width="100" DisplayMemberBinding="{Binding PacketNumber}"/>
@@ -57,8 +59,8 @@
             <GridSplitter Grid.Column="1" Width="3" HorizontalAlignment="Stretch" />
             <TextBlock Grid.Column="0" Grid.Row="0" Margin="10, 3, 0, 0" Text="IP"/>
             <TextBlock Grid.Column="3" Grid.Row="0" Margin="10, 3, 0, 0" Text="{Binding SelectedValue.PacketIp.Protocol}"/>
-            <TreeView x:Name="treeView1" Margin="10,25,10,10" Grid.Column="0" ItemsSource="{Binding SelectedValue.PacketIPGroupedData}"/>
-            <TreeView x:Name="treeView2" Margin="10,25,10,10" Grid.Column="2" ItemsSource="{Binding SelectedValue.UpLevelProtocolGroupedData}"/>
+            <TreeView x:Name="treeView1" Margin="10,25,10,10" Grid.Column="0" ItemsSource="{Binding SelectedPacket.PacketIPGroupedData}"/>
+            <TreeView x:Name="treeView2" Margin="10,25,10,10" Grid.Column="2" ItemsSource="{Binding SelectedPacket.UpLevelProtocolGroupedData}"/>
         </Grid>
 
         <DockPanel Grid.Row="4">

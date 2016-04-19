@@ -1,10 +1,14 @@
 ﻿using NetworkMonitor.Models;
 using NetworkMonitor.Models.Packets;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Net;
+using System.Net.Sockets;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using System.Linq;
 
 namespace NetworkMonitor.ViewModels
 {
@@ -14,6 +18,7 @@ namespace NetworkMonitor.ViewModels
 
         public INetworkPacketsReceiver PacketsReceiver { get; private set; }
         public ObservableCollection<PacketInfo> Packets { get; private set; }
+        public ObservableCollection<IPAddress> IpAddresses { get; private set; }
 
         ulong _packetsReceivedCount;
         public ulong PacketsReceivedCount
@@ -26,15 +31,27 @@ namespace NetworkMonitor.ViewModels
             }
         }
 
-        PacketInfo _selectedValue;
-        public PacketInfo SelectedValue
+        PacketInfo _selectedPacket;
+        public PacketInfo SelectedPacket
         {
-            get { return _selectedValue; }
+            get { return _selectedPacket; }
             set
             {
-                if (value != null && value != _selectedValue)
-                    _selectedValue = value;                                 
-                OnPropertyChanged("SelectedValue");
+                if (value != null && value != _selectedPacket)
+                    _selectedPacket = value;                                 
+                OnPropertyChanged("SelectedPacket");
+            }
+        }
+
+        IPAddress _selectedIp;
+        public IPAddress SelectedIP
+        {
+            get { return _selectedIp; }
+            set
+            {
+                if (value != null && value != _selectedIp)
+                    _selectedIp = value;
+                OnPropertyChanged("_selectedIp");
             }
         }
 
@@ -59,21 +76,40 @@ namespace NetworkMonitor.ViewModels
             MonitorStart = new RelayCommand(arg => StartNetworkMonitor());
             MonitorStop = new RelayCommand(arg => StopNetworkMonitor());
             ClearPacketCollection = new RelayCommand(arg => Packets.Clear());
+
+            GetIpAddressListAsync();
         }
 
         #endregion // Constructors
 
         #region Methods
 
-        async void StartNetworkMonitor ()
+        async void GetIpAddressListAsync()
         {
-            IPHostEntry ipHost = await Dns.GetHostEntryAsync(Dns.GetHostName());
-            IPAddress ipAddr = ipHost.AddressList[4];   // Дать пользователю выбрать IP в GUI;
-            IPEndPoint ipEndPoint = new IPEndPoint(ipAddr, 11000);
-
             try
             {
-                await PacketsReceiver.StartAsync(ipAddr, ipEndPoint);
+                IPHostEntry ipHost;
+                await Task.Run(async () =>
+                {
+                    ipHost = await Dns.GetHostEntryAsync(Dns.GetHostName());
+                    List<IPAddress> tempIpAdd = new List<IPAddress>();
+                    foreach (var address in ipHost.AddressList)
+                        if (address.AddressFamily == AddressFamily.InterNetwork)
+                            tempIpAdd.Add(address);
+                    IpAddresses = new ObservableCollection<IPAddress>(tempIpAdd);
+                    if (IpAddresses.Last() != null)
+                        SelectedIP = IpAddresses.Last();
+                });
+            }
+            catch (Exception ex) { MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK); }
+        }
+
+        async void StartNetworkMonitor ()
+        {
+            try
+            {
+                IPEndPoint ipEndPoint = new IPEndPoint(SelectedIP, 11000);
+                await PacketsReceiver.StartAsync(SelectedIP, ipEndPoint);
             }
             catch (ObjectDisposedException) { } // Возникает при принудительном закрытии сокета методом Close().
             catch (Exception ex) { MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK); }
