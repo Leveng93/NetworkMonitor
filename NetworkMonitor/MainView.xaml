@@ -58,7 +58,7 @@
             </Grid.RowDefinitions>            
             <GridSplitter Grid.Column="1" Width="3" HorizontalAlignment="Stretch" />
             <TextBlock Grid.Column="0" Grid.Row="0" Margin="10, 3, 0, 0" Text="IP"/>
-            <TextBlock Grid.Column="3" Grid.Row="0" Margin="10, 3, 0, 0" Text="{Binding SelectedValue.PacketIp.Protocol}"/>
+            <TextBlock Grid.Column="3" Grid.Row="0" Margin="10, 3, 0, 0" Text="{Binding SelectedPacket.PacketIp.Protocol}"/>
             <TreeView x:Name="treeView1" Margin="10,25,10,10" Grid.Column="0" ItemsSource="{Binding SelectedPacket.PacketIPGroupedData}"/>
             <TreeView x:Name="treeView2" Margin="10,25,10,10" Grid.Column="2" ItemsSource="{Binding SelectedPacket.UpLevelProtocolGroupedData}"/>
         </Grid>
